@@ -1,0 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+console.log('MediVault Admin Console mounted');
