@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediVault Admin | Platform Management & Health Operations Console</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN with customized MediVault palette -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e',
+            },
+            slate: {
+              850: '#151e2e',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js for Interactive Metrics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+</head>
+
+<body class="h-full bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden flex flex-col">
+
+  <!-- ================= TOP UTILITY / ALERT BANNER ================= -->
+  <div class="bg-gradient-to-r from-teal-900/80 via-slate-900 to-indigo-950/80 border-b border-teal-500/20 px-4 py-1.5 text-xs flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center space-x-2">
+      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-teal-400/10 text-teal-300 border border-teal-400/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse mr-1"></span>
+        HEALTH VAULT LIVE
+      </span>
+      <span class="text-slate-300 hidden sm:inline">MediVault Platform Management Console</span>
+      <span class="text-slate-500 hidden sm:inline">·</span>
+      <span class="text-slate-400 hidden md:inline">Indian DPDP & HIPAA Security Guard Active</span>
+    </div>
+    <div class="flex items-center space-x-4 text-slate-400">
+      <span class="hidden lg:inline"><i data-lucide="cpu" class="w-3.5 h-3.5 inline mr-1 text-teal-400"></i>OCR Engine: <strong class="text-emerald-400">Online (98.6%)</strong></span>
+      <span class="hidden lg:inline"><i data-lucide="database" class="w-3.5 h-3.5 inline mr-1 text-blue-400"></i>Storage: <strong class="text-slate-200">1.84 TB / 5 TB</strong></span>
+      <button onclick="openModal('quick-alert-modal')" class="text-teal-400 hover:text-teal-300 font-medium transition flex items-center text-xs">
+        <i data-lucide="bell-plus" class="w-3.5 h-3.5 mr-1"></i> Broadcast Alert
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MAIN LAYOUT WRAPPER ================= -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside id="sidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 transition-all duration-300 z-20">
+      
+      <!-- Brand Logo Header -->
+      <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-teal-500/20">
+            <i data-lucide="shield-check" class="w-5 h-5 text-slate-950 font-bold"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <span class="font-bold text-base tracking-tight text-white">Medi<span class="text-teal-400">Vault</span></span>
+              <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-teal-400/10 text-teal-400 border border-teal-400/30">ADMIN</span>
+            </div>
+            <p class="text-[10px] text-slate-400">Health Platform Operations</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex-1 overflow-y-auto custom-scroll py-4 px-3 space-y-6">
+        
+        <!-- SECTION 1: CORE OPERATIONS -->
+        <div>
+          <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Core Operations</div>
+          <nav class="space-y-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-teal-400 bg-teal-500/10 border border-teal-500/20">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>Executive Dashboard</span>
+              </div>
+              <span class="text-[10px] bg-teal-500/20 text-teal-300 px-1.5 py-0.5 rounded font-mono">Live</span>
+            </button>
+
+            <button onclick="switchTab('users')" id="nav-users" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="users" class="w-4 h-4"></i>
+                <span>Users & Families</span>
+              </div>
+              <span class="text-[11px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">12.8k</span>
+            </button>
+
+            <button onclick="switchTab('records')" id="nav-records" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="folder-lock" class="w-4 h-4"></i>
+                <span>Document Locker</span>
+              </div>
+              <span class="text-[11px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">54.9k</span>
+            </button>
+
+            <button onclick="switchTab('ocr')" id="nav-ocr" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="scan-line" class="w-4 h-4"></i>
+                <span>OCR Pipeline Queue</span>
+              </div>
+              <span class="text-[11px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-mono">4 queue</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- SECTION 2: HEALTH ECOSYSTEM -->
+        <div>
+          <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Healthcare Network</div>
+          <nav class="space-y-1">
+            <button onclick="switchTab('discovery')" id="nav-discovery" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Nearby Discovery</span>
+              </div>
+              <span class="text-[11px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">342</span>
+            </button>
+
+            <button onclick="switchTab('communications')" id="nav-communications" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="megaphone" class="w-4 h-4"></i>
+                <span>Alerts & Offers</span>
+              </div>
+              <span class="text-[11px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-mono">6 active</span>
+            </button>
+
+            <button onclick="switchTab('support')" id="nav-support" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="life-buoy" class="w-4 h-4"></i>
+                <span>Support & Helpdesk</span>
+              </div>
+              <span class="text-[11px] bg-rose-500/20 text-rose-300 px-1.5 py-0.5 rounded font-mono">3 open</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- SECTION 3: REVENUE & SECURITY -->
+        <div>
+          <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Finance & Governance</div>
+          <nav class="space-y-1">
+            <button onclick="switchTab('billing')" id="nav-billing" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="credit-card" class="w-4 h-4"></i>
+                <span>Subscriptions & Plans</span>
+              </div>
+              <span class="text-[10px] text-emerald-400 font-mono">₹4.28L</span>
+            </button>
+
+            <button onclick="switchTab('security')" id="nav-security" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+              <div class="flex items-center space-x-3">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                <span>Audit Logs & RBAC</span>
+              </div>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </button>
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- Bottom Admin User Profile Card -->
+      <div class="p-3 border-t border-slate-800 bg-slate-900/60">
+        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-800/60 border border-slate-700/50">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-500 flex items-center justify-center font-bold text-xs text-white">
+              VS
+            </div>
+            <div class="overflow-hidden">
+              <div class="text-xs font-semibold text-white truncate">Vikram Sharma</div>
+              <div class="text-[10px] text-teal-400 flex items-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mr-1"></span>
+                Super Admin
+              </div>
+            </div>
+          </div>
+          <button title="Admin Settings" onclick="switchTab('security')" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700 transition">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <div class="flex-1 flex flex-col overflow-hidden bg-slate-950">
+
+      <!-- TOP APP HEADER -->
+      <header class="h-16 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 flex items-center justify-between shrink-0 z-10">
+        
+        <!-- Breadcrumbs & Active Title -->
+        <div class="flex items-center space-x-3">
+          <button id="sidebar-toggle" onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div class="flex items-center space-x-2 text-sm">
+            <span class="text-slate-400 font-medium">Console</span>
+            <span class="text-slate-600">/</span>
+            <span id="breadcrumb-title" class="text-white font-semibold capitalize">Executive Dashboard</span>
+          </div>
+        </div>
+
+        <!-- Global Search & Actions -->
+        <div class="flex items-center space-x-3">
+          
+          <!-- Quick Search Bar (Ctrl+K) -->
+          <div class="relative w-64 md:w-80">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <input type="text" id="global-search-input" onkeyup="handleGlobalSearch(event)" placeholder="Search users, records, doctors, tickets... (Ctrl+K)" 
+                   class="w-full bg-slate-800/80 border border-slate-700/80 rounded-lg pl-9 pr-8 py-1.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+            <kbd class="absolute right-2.5 top-2 text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-mono hidden md:inline">⌘K</kbd>
+          </div>
+
+          <!-- Date Filter Selector -->
+          <select id="date-range-filter" onchange="filterDateRange(this.value)" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-teal-500 hidden sm:block">
+            <option value="today">Today</option>
+            <option value="7d" selected>Last 7 Days</option>
+            <option value="30d">Last 30 Days</option>
+            <option value="ytd">Year to Date</option>
+          </select>
+
+          <!-- Notifications Bell -->
+          <div class="relative">
+            <button onclick="toggleNotifications()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition relative">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-400"></span>
+            </button>
+            <!-- Dropdown Menu -->
+            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-3 z-50">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-xs font-semibold text-slate-200">
+                <span>Platform Alerts (3 New)</span>
+                <button onclick="clearNotifications()" class="text-teal-400 hover:underline text-[10px]">Mark all read</button>
+              </div>
+              <div class="divide-y divide-slate-800/60 text-xs text-slate-300 max-h-60 overflow-y-auto custom-scroll">
+                <div class="py-2.5 hover:bg-slate-800/30 px-1 rounded transition">
+                  <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span class="text-amber-400 font-semibold">OCR Pipeline</span>
+                    <span>2 mins ago</span>
+                  </div>
+                  <p class="text-xs text-slate-200 mt-0.5">Password-protected PDF uploaded by Vikram Sharma (`REC-1082`).</p>
+                </div>
+                <div class="py-2.5 hover:bg-slate-800/30 px-1 rounded transition">
+                  <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span class="text-rose-400 font-semibold">Emergency QR Scan</span>
+                    <span>14 mins ago</span>
+                  </div>
+                  <p class="text-xs text-slate-200 mt-0.5">Emergency Card for Deepak Sharma viewed via QR in New Delhi.</p>
+                </div>
+                <div class="py-2.5 hover:bg-slate-800/30 px-1 rounded transition">
+                  <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span class="text-emerald-400 font-semibold">Billing</span>
+                    <span>1 hour ago</span>
+                  </div>
+                  <p class="text-xs text-slate-200 mt-0.5">Family Care Premium renewed (₹1,996 for 4 members).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Button -->
+          <button onclick="exportAuditReport()" class="hidden sm:flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-teal-400"></i>
+            <span>Export Data</span>
+          </button>
+
+        </div>
+      </header>
+
+      <!-- TAB CONTENT CONTAINER -->
+      <main class="flex-1 overflow-y-auto p-6 custom-scroll">
+
+        <!-- ========================================================================= -->
+        <!-- TAB 1: EXECUTIVE DASHBOARD & REAL-TIME ANALYTICS -->
+        <!-- ========================================================================= -->
+        <div id="tab-dashboard" class="tab-pane space-y-6">
+          
+          <!-- Welcome & Live Status Header -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-slate-900 to-teal-950/40 p-5 rounded-2xl border border-slate-800">
+            <div>
+              <h1 class="text-xl font-bold text-white tracking-tight flex items-center">
+                System Overview & Health Operations
+                <span class="ml-2.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> All Systems Operational
+                </span>
+              </h1>
+              <p class="text-slate-400 text-xs mt-1">Live metrics across family health lockers, cloud document ingestion, OCR pipelines, and healthcare discovery.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="switchTab('ocr')" class="px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 text-xs font-semibold flex items-center transition">
+                <i data-lucide="scan" class="w-3.5 h-3.5 mr-1.5"></i> Inspect OCR Pipeline
+              </button>
+              <button onclick="openModal('quick-alert-modal')" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold shadow-lg shadow-teal-600/20 flex items-center transition">
+                <i data-lucide="bell-ring" class="w-3.5 h-3.5 mr-1.5"></i> Post Health Advisory
+              </button>
+            </div>
+          </div>
+
+          <!-- TOP 4 KPI CARDS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- KPI 1: Total Users -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-400">Total Registered Users</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                  <i data-lucide="users" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <span class="text-2xl font-bold text-white tracking-tight">12,840</span>
+                <span class="text-xs font-semibold text-emerald-400 flex items-center">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> +8.4%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>38,520 Family Dependents</span>
+                <span class="text-slate-400">vs last mo</span>
+              </div>
+            </div>
+
+            <!-- KPI 2: Vaulted Records -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-400">Total Vaulted Documents</span>
+                <div class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
+                  <i data-lucide="files" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <span class="text-2xl font-bold text-white tracking-tight">54,920</span>
+                <span class="text-xs font-semibold text-emerald-400 flex items-center">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> +14.2%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>1,420 uploaded today</span>
+                <span class="text-teal-400">13 Categories</span>
+              </div>
+            </div>
+
+            <!-- KPI 3: Storage Utilized -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-400">Encrypted Cloud Storage</span>
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                  <i data-lucide="hard-drive" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <span class="text-2xl font-bold text-white tracking-tight">1.84 <span class="text-sm font-normal text-slate-400">TB</span></span>
+                <span class="text-xs font-semibold text-slate-400">36.8% Cap</span>
+              </div>
+              <div class="mt-2 w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 36.8%"></div>
+              </div>
+            </div>
+
+            <!-- KPI 4: Monthly Recurring Revenue -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-400">Monthly Subscriptions (MRR)</span>
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <i data-lucide="indian-rupee" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <span class="text-2xl font-bold text-white tracking-tight">₹4,28,400</span>
+                <span class="text-xs font-semibold text-emerald-400 flex items-center">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> +18.2%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>858 Family Plans @ ₹499/mo</span>
+                <span class="text-emerald-400">Active</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CHARTS SECTION: UPLOAD TRENDS & RECORD CATEGORIES -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Ingestion Line Chart (2 Cols) -->
+            <div class="lg:col-span-2 bg-slate-900 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Daily Document Ingestion Trends</h3>
+                  <p class="text-xs text-slate-400">Camera uploads vs digital PDF uploads across the platform</p>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                  <span class="flex items-center text-teal-400"><span class="w-2.5 h-2.5 rounded-full bg-teal-400 mr-1.5"></span> Camera Scans</span>
+                  <span class="flex items-center text-blue-400"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1.5"></span> Digital PDFs</span>
+                </div>
+              </div>
+              <div class="h-64 relative">
+                <canvas id="ingestionChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Categories Donut Chart (1 Col) -->
+            <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Records by Category</h3>
+                  <p class="text-xs text-slate-400">Distribution across 13 health types</p>
+                </div>
+                <button onclick="switchTab('records')" class="text-xs text-teal-400 hover:underline">View All</button>
+              </div>
+              <div class="h-52 relative flex items-center justify-center">
+                <canvas id="categoryChart"></canvas>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-400 pt-3 border-t border-slate-800/80">
+                <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-teal-400 mr-1.5"></span> Prescriptions (32%)</div>
+                <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-400 mr-1.5"></span> Lab Reports (24%)</div>
+                <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span> Dental Care (14%)</div>
+                <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-rose-400 mr-1.5"></span> Vaccinations (12%)</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- SECONDARY ROW: REAL-TIME ACTIVITY FEED & OCR PIPELINE STATUS -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Real-Time Activity Stream (2 Cols) -->
+            <div class="lg:col-span-2 bg-slate-900 p-5 rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="activity" class="w-4 h-4 text-teal-400"></i>
+                  <h3 class="text-sm font-semibold text-white">Live Platform Activity Stream</h3>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">Auto-refreshed</span>
+              </div>
+              <div class="divide-y divide-slate-800/80 text-xs">
+                
+                <div class="py-3 flex items-start justify-between">
+                  <div class="flex items-start space-x-3">
+                    <div class="w-7 h-7 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="file-plus" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-slate-200"><strong class="text-white">Pooja Sharma</strong> uploaded <em>Complete Blood Count</em> report.</p>
+                      <p class="text-[11px] text-slate-400">Assigned to Vikram Sharma · Processed via OCR in 1.4s</p>
+                    </div>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-mono">1 min ago</span>
+                </div>
+
+                <div class="py-3 flex items-start justify-between">
+                  <div class="flex items-start space-x-3">
+                    <div class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="qr-code" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-slate-200"><strong class="text-white">Emergency Card Accessed</strong> for Deepak Sharma (Age 68, B+).</p>
+                      <p class="text-[11px] text-slate-400">Scanned via Public QR in South Delhi · Emergency Contacts notified</p>
+                    </div>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-mono">6 mins ago</span>
+                </div>
+
+                <div class="py-3 flex items-start justify-between">
+                  <div class="flex items-start space-x-3">
+                    <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="share-2" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-slate-200"><strong class="text-white">Doctor Share Link Created</strong> by Vikram Sharma for Dr. Ananya Roy.</p>
+                      <p class="text-[11px] text-slate-400">3 Prescriptions shared · 48-hour secure expiry enforced</p>
+                    </div>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-mono">15 mins ago</span>
+                </div>
+
+                <div class="py-3 flex items-start justify-between">
+                  <div class="flex items-start space-x-3">
+                    <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <p class="text-slate-200"><strong class="text-white">Family Premium Subscribed</strong> (₹499/mo) by Vikram Sharma.</p>
+                      <p class="text-[11px] text-slate-400">Razorpay TXN_982319 · Covered members: Vikram, Pooja, Aarav, Deepak</p>
+                    </div>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-mono">32 mins ago</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Real-Time OCR Pipeline Health Widget (1 Col) -->
+            <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-sm font-semibold text-white flex items-center">
+                    <i data-lucide="cpu" class="w-4 h-4 text-teal-400 mr-2"></i> OCR Extraction Health
+                  </h3>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300">Operational</span>
+                </div>
+                <p class="text-xs text-slate-400 mb-4">Real-time status of document categorization and metadata extraction workers.</p>
+                
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between text-xs mb-1">
+                      <span class="text-slate-300">Pipeline Success Rate</span>
+                      <span class="text-emerald-400 font-semibold">98.6%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5">
+                      <div class="bg-emerald-400 h-1.5 rounded-full" style="width: 98.6%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs mb-1">
+                      <span class="text-slate-300">Average Processing Latency</span>
+                      <span class="text-blue-400 font-semibold">1.42 seconds</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5">
+                      <div class="bg-blue-400 h-1.5 rounded-full" style="width: 82%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs mb-1">
+                      <span class="text-slate-300">Active Extraction Queue Depth</span>
+                      <span class="text-amber-400 font-semibold">4 jobs pending</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5">
+                      <div class="bg-amber-400 h-1.5 rounded-full" style="width: 15%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs">
+                  <div class="flex items-center text-amber-300 font-semibold mb-1">
+                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5 mr-1.5"></i> 1 Triage Item
+                  </div>
+                  <p class="text-[11px] text-slate-400">Password-protected PDF (`REC-1082`) failed automated decryption. Awaiting user password.</p>
+                </div>
+              </div>
+
+              <button onclick="switchTab('ocr')" class="mt-4 w-full py-2 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded-lg text-xs font-semibold transition border border-slate-700">
+                Open OCR Management Queue →
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 2: USERS & FAMILY ACCOUNT MANAGEMENT -->
+        <!-- ========================================================================= -->
+        <div id="tab-users" class="tab-pane hidden space-y-6">
+          
+          <!-- Section Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">User Accounts & Family Circles</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Manage primary user accounts, linked family dependents, storage quotas, and DPDP compliance.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span class="text-xs text-slate-400">Showing <strong class="text-white">4 Demo Profiles</strong></span>
+              <button onclick="showToast('Data refreshed successfully')" class="p-1.5 text-slate-400 hover:text-white rounded bg-slate-800 border border-slate-700">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Controls & Filters -->
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="relative w-full md:w-80">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+              <input type="text" id="user-filter-input" onkeyup="filterUserTable(this.value)" placeholder="Filter by name, email, phone, ID..." 
+                     class="w-full bg-slate-800 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-teal-500">
+            </div>
+            <div class="flex items-center space-x-2 w-full md:w-auto">
+              <select class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none">
+                <option value="all">All Plans</option>
+                <option value="premium">Family Care Premium (₹499)</option>
+                <option value="free">Free Health Locker</option>
+              </select>
+              <select class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none">
+                <option value="all">Status: All</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Users Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs" id="users-table">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">User Details</th>
+                    <th class="py-3 px-4">Contact Info</th>
+                    <th class="py-3 px-4">Family Network</th>
+                    <th class="py-3 px-4">Vaulted Records</th>
+                    <th class="py-3 px-4">Storage Used</th>
+                    <th class="py-3 px-4">Subscription</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300" id="users-table-body">
+                  
+                  <!-- User 1: Vikram Sharma (Primary) -->
+                  <tr class="hover:bg-slate-800/40 transition">
+                    <td class="py-3.5 px-4">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold flex items-center justify-center">VS</div>
+                        <div>
+                          <div class="font-semibold text-white">Vikram Sharma</div>
+                          <div class="text-[10px] text-slate-400 font-mono">USR-9021 · Age 40 (Self)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div>vikram.sharma@example.com</div>
+                      <div class="text-[11px] text-slate-400">+91 98765 43210</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-teal-500/10 text-teal-300 border border-teal-500/20">
+                        4 Members Linked
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono font-medium text-slate-200">
+                      24 records
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="text-[11px] text-slate-300 font-mono">1.2 GB / 50 GB</div>
+                      <div class="w-20 bg-slate-800 rounded-full h-1 mt-1">
+                        <div class="bg-teal-400 h-1 rounded-full" style="width: 12%"></div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        Family Care (₹499)
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center text-emerald-400 text-[11px]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Active
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openUserDrawer('vikram')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 hover:text-teal-300 rounded text-xs font-semibold transition border border-slate-700">
+                        Inspect Profile
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- User 2: Pooja Sharma -->
+                  <tr class="hover:bg-slate-800/40 transition">
+                    <td class="py-3.5 px-4">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-peach-500/20 text-rose-400 font-bold flex items-center justify-center">PS</div>
+                        <div>
+                          <div class="font-semibold text-white">Pooja Sharma</div>
+                          <div class="text-[10px] text-slate-400 font-mono">USR-9022 · Age 37 (Wife)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div>pooja.s@example.com</div>
+                      <div class="text-[11px] text-slate-400">+91 98765 43211</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="text-slate-400 text-xs">Linked to Vikram</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono font-medium text-slate-200">
+                      16 records
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="text-[11px] text-slate-300 font-mono">Shared Pool</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">
+                        Covered Dependent
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center text-emerald-400 text-[11px]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Active
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openUserDrawer('pooja')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 hover:text-teal-300 rounded text-xs font-semibold transition border border-slate-700">
+                        Inspect Profile
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- User 3: Aarav Sharma -->
+                  <tr class="hover:bg-slate-800/40 transition">
+                    <td class="py-3.5 px-4">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center">AS</div>
+                        <div>
+                          <div class="font-semibold text-white">Aarav Sharma</div>
+                          <div class="text-[10px] text-slate-400 font-mono">USR-9023 · Age 8 (Son)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="text-slate-400 text-[11px]">Managed by Parent</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="text-slate-400 text-xs">Linked to Vikram</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono font-medium text-slate-200">
+                      8 records
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="text-[11px] text-slate-300 font-mono">Shared Pool</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">
+                        Covered Dependent
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center text-emerald-400 text-[11px]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Active
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openUserDrawer('aarav')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 hover:text-teal-300 rounded text-xs font-semibold transition border border-slate-700">
+                        Inspect Profile
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- User 4: Deepak Sharma -->
+                  <tr class="hover:bg-slate-800/40 transition">
+                    <td class="py-3.5 px-4">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center">DS</div>
+                        <div>
+                          <div class="font-semibold text-white">Deepak Sharma</div>
+                          <div class="text-[10px] text-slate-400 font-mono">USR-9024 · Age 68 (Father)</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div>deepak.s@example.com</div>
+                      <div class="text-[11px] text-slate-400">+91 98765 43212</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="text-slate-400 text-xs">Linked to Vikram</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono font-medium text-slate-200">
+                      12 records
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="text-[11px] text-slate-300 font-mono">Shared Pool</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">
+                        Covered Dependent
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center text-emerald-400 text-[11px]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Active
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openUserDrawer('deepak')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 hover:text-teal-300 rounded text-xs font-semibold transition border border-slate-700">
+                        Inspect Profile
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 3: MEDICAL RECORDS & HEALTH LOCKER -->
+        <!-- ========================================================================= -->
+        <div id="tab-records" class="tab-pane hidden space-y-6">
+          
+          <!-- Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Central Document Locker Explorer</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Filter across all 13 medical categories. Protected by HIPAA and Break-Glass privacy controls.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-teal-400/10 text-teal-400 border border-teal-400/20">
+                <i data-lucide="shield" class="w-3.5 h-3.5 inline mr-1"></i> Break-Glass Privacy Enforced
+              </span>
+            </div>
+          </div>
+
+          <!-- Category Chips -->
+          <div class="flex items-center space-x-2 overflow-x-auto pb-2 text-xs">
+            <button onclick="filterRecordsByCategory('all')" class="cat-pill active px-3 py-1.5 rounded-lg bg-teal-500 text-slate-950 font-bold whitespace-nowrap">All Records (6)</button>
+            <button onclick="filterRecordsByCategory('Prescriptions')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Prescriptions</button>
+            <button onclick="filterRecordsByCategory('Lab reports')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Lab Reports</button>
+            <button onclick="filterRecordsByCategory('Dental')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Dental Care</button>
+            <button onclick="filterRecordsByCategory('Vaccinations')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Vaccinations</button>
+            <button onclick="filterRecordsByCategory('Radiology & imaging')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Radiology & Imaging</button>
+            <button onclick="filterRecordsByCategory('Insurance documents')" class="cat-pill px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap">Insurance</button>
+          </div>
+
+          <!-- Records Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs" id="records-table">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">Document Title</th>
+                    <th class="py-3 px-4">Category</th>
+                    <th class="py-3 px-4">Assigned Member</th>
+                    <th class="py-3 px-4">Doctor / Health Facility</th>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">File Type</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300" id="records-table-body">
+                  
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Prescriptions">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-teal-400 shrink-0"></i>
+                      <span>General physician prescription</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-500/10 text-teal-300 border border-teal-500/20">Prescriptions</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Vikram Sharma (Self)</td>
+                    <td class="py-3.5 px-4 text-slate-300">Dr. Ananya Roy</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">02 Nov 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(1, 'General physician prescription')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Lab reports">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-blue-400 shrink-0"></i>
+                      <span>Complete blood count</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20">Lab reports</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Vikram Sharma (Self)</td>
+                    <td class="py-3.5 px-4 text-slate-300">City Diagnostics</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">28 Oct 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(2, 'Complete blood count')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Dental">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                      <span>Dental consultation notes</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20">Dental</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Pooja Sharma (Wife)</td>
+                    <td class="py-3.5 px-4 text-slate-300">Dr. Meera Shah</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">25 Oct 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(3, 'Dental consultation notes')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Vaccinations">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                      <span>Influenza vaccination record</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Vaccinations</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Aarav Sharma (Son)</td>
+                    <td class="py-3.5 px-4 text-slate-300">Family Health Clinic</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">20 Oct 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(4, 'Influenza vaccination record')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Radiology & imaging">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-purple-400 shrink-0"></i>
+                      <span>Knee X-ray report</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">Radiology & imaging</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Deepak Sharma (Father)</td>
+                    <td class="py-3.5 px-4 text-slate-300">City Imaging Centre</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">18 Oct 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(5, 'Knee X-ray report')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 transition" data-category="Lab reports">
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                      <i data-lucide="file-text" class="w-4 h-4 text-blue-400 shrink-0"></i>
+                      <span>Annual health checkup</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20">Lab reports</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-200">Pooja Sharma (Wife)</td>
+                    <td class="py-3.5 px-4 text-slate-300">City Diagnostics</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-400">15 Oct 2026</td>
+                    <td class="py-3.5 px-4"><span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-mono">PDF</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openBreakGlassModal(6, 'Annual health checkup')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Inspect Document
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 4: OCR PIPELINE & INGESTION QUEUE -->
+        <!-- ========================================================================= -->
+        <div id="tab-ocr" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">OCR Ingestion & Extraction Worker Queue</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Real-time monitoring of document text extraction, auto-classification, and triage tools.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+              <button onclick="simulateOCRJob()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-semibold flex items-center transition">
+                <i data-lucide="play" class="w-3.5 h-3.5 mr-1.5"></i> Trigger Sample OCR Job
+              </button>
+            </div>
+          </div>
+
+          <!-- Queue Health Indicators -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Active Jobs in Progress</span>
+              <div class="text-xl font-bold text-teal-400 mt-1 flex items-center">
+                <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping mr-2"></span> 2 Processing
+              </div>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Pending in Ingestion Queue</span>
+              <div class="text-xl font-bold text-amber-400 mt-1">4 Pending</div>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Extraction Confidence Rate</span>
+              <div class="text-xl font-bold text-emerald-400 mt-1">98.6% Avg</div>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Flagged Triage / Failed</span>
+              <div class="text-xl font-bold text-rose-400 mt-1">1 Needs Review</div>
+            </div>
+          </div>
+
+          <!-- Jobs Queue Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 class="text-xs font-semibold text-white uppercase tracking-wider">Active Pipeline Jobs</h3>
+              <span class="text-[11px] text-slate-400">Worker Cluster: 4 nodes active</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">Job ID</th>
+                    <th class="py-3 px-4">User & Document</th>
+                    <th class="py-3 px-4">Detected Category</th>
+                    <th class="py-3 px-4">Confidence</th>
+                    <th class="py-3 px-4">Stage</th>
+                    <th class="py-3 px-4">Duration</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                  
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-mono text-teal-400">#OCR-8821</td>
+                    <td class="py-3 px-4">
+                      <div class="font-semibold text-white">Vikram Sharma</div>
+                      <div class="text-[10px] text-slate-400">Prescription_Nov2.pdf</div>
+                    </td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-teal-500/20 text-teal-300">Prescriptions</span></td>
+                    <td class="py-3 px-4 font-mono text-emerald-400">99.2%</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300">Completed</span></td>
+                    <td class="py-3 px-4 font-mono text-slate-400">1.4s</td>
+                    <td class="py-3 px-4 text-right">
+                      <button onclick="showToast('Metadata verified')" class="text-slate-400 hover:text-white text-xs">View Data</button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40 bg-rose-500/5">
+                    <td class="py-3 px-4 font-mono text-rose-400">#OCR-8822</td>
+                    <td class="py-3 px-4">
+                      <div class="font-semibold text-white">Vikram Sharma</div>
+                      <div class="text-[10px] text-rose-300">Protected_Report.pdf</div>
+                    </td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400">Unknown</span></td>
+                    <td class="py-3 px-4 font-mono text-rose-400">0%</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-300">Password Locked</span></td>
+                    <td class="py-3 px-4 font-mono text-slate-400">0.2s</td>
+                    <td class="py-3 px-4 text-right">
+                      <button onclick="openModal('ocr-retry-modal')" class="px-2.5 py-1 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 rounded text-xs font-semibold">Triage Failure</button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-mono text-teal-400">#OCR-8823</td>
+                    <td class="py-3 px-4">
+                      <div class="font-semibold text-white">Pooja Sharma</div>
+                      <div class="text-[10px] text-slate-400">Dental_Consult.jpg</div>
+                    </td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300">Dental</span></td>
+                    <td class="py-3 px-4 font-mono text-emerald-400">96.8%</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-teal-500/20 text-teal-300 animate-pulse">Extracting Lines</span></td>
+                    <td class="py-3 px-4 font-mono text-slate-400">0.9s</td>
+                    <td class="py-3 px-4 text-right">
+                      <span class="text-slate-500 text-xs font-mono">Running</span>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 5: NEARBY HEALTHCARE DISCOVERY & PROVIDERS -->
+        <!-- ========================================================================= -->
+        <div id="tab-discovery" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Nearby Healthcare Provider Directory</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Manage curated and cached healthcare providers (Hospitals, Clinics, Diagnostic Labs, 24/7 Pharmacies).</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openModal('add-provider-modal')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-semibold flex items-center transition shadow-lg shadow-teal-600/20">
+                <i data-lucide="plus" class="w-3.5 h-3.5 mr-1.5"></i> Add Provider
+              </button>
+            </div>
+          </div>
+
+          <!-- Provider Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Provider 1 -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20">Diagnostic Centre</span>
+                  <span class="text-emerald-400 flex items-center text-[10px] font-semibold bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                    <i data-lucide="badge-check" class="w-3 h-3 mr-0.5"></i> Verified
+                  </span>
+                </div>
+                <h4 class="text-sm font-semibold text-white mt-2">City Diagnostics</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Ring Road, South Ext, New Delhi</p>
+                <div class="mt-3 flex items-center space-x-2 text-[11px] text-slate-300">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>+91 11 4567 8900</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Open 7 AM - 9 PM</span>
+                <button onclick="showToast('Provider profile edited')" class="text-teal-400 hover:underline">Edit</button>
+              </div>
+            </div>
+
+            <!-- Provider 2 -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-500/10 text-teal-300 border border-teal-500/20">General Clinic</span>
+                  <span class="text-emerald-400 flex items-center text-[10px] font-semibold bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                    <i data-lucide="badge-check" class="w-3 h-3 mr-0.5"></i> Verified
+                  </span>
+                </div>
+                <h4 class="text-sm font-semibold text-white mt-2">Family Health Clinic</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Dr. Ananya Roy (Internal Medicine)</p>
+                <div class="mt-3 flex items-center space-x-2 text-[11px] text-slate-300">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>+91 11 2345 6789</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Open 9 AM - 7 PM</span>
+                <button onclick="showToast('Provider profile edited')" class="text-teal-400 hover:underline">Edit</button>
+              </div>
+            </div>
+
+            <!-- Provider 3 -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20">Dental Clinic</span>
+                  <span class="text-emerald-400 flex items-center text-[10px] font-semibold bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                    <i data-lucide="badge-check" class="w-3 h-3 mr-0.5"></i> Verified
+                  </span>
+                </div>
+                <h4 class="text-sm font-semibold text-white mt-2">Dr. Meera Shah Dental Studio</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Defence Colony, New Delhi</p>
+                <div class="mt-3 flex items-center space-x-2 text-[11px] text-slate-300">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>+91 11 8765 4321</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">By Appointment</span>
+                <button onclick="showToast('Provider profile edited')" class="text-teal-400 hover:underline">Edit</button>
+              </div>
+            </div>
+
+            <!-- Provider 4 -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20">24/7 Emergency</span>
+                  <span class="text-emerald-400 flex items-center text-[10px] font-semibold bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                    <i data-lucide="badge-check" class="w-3 h-3 mr-0.5"></i> Verified
+                  </span>
+                </div>
+                <h4 class="text-sm font-semibold text-white mt-2">Apex Super Specialty Hospital</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Trauma Center & ICU Facilities</p>
+                <div class="mt-3 flex items-center space-x-2 text-[11px] text-slate-300">
+                  <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>+91 11 1022 3344</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-rose-400 font-semibold">24 Hours Open</span>
+                <button onclick="showToast('Provider profile edited')" class="text-teal-400 hover:underline">Edit</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Moderation Queue for Reported Listings -->
+          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
+            <h3 class="text-sm font-semibold text-white mb-2 flex items-center">
+              <i data-lucide="flag" class="w-4 h-4 text-amber-400 mr-2"></i> Reported Listings Queue (1 Pending User Report)
+            </h3>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex items-center justify-between">
+              <div>
+                <span class="font-semibold text-white">Apollo Pharmacy (Saket Branch)</span>: 
+                <span class="text-slate-300">User reported changed contact number. Requested update from 011-2299 to 011-8844.</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button onclick="showToast('Report rejected')" class="px-2.5 py-1 text-slate-400 hover:text-white rounded border border-slate-700">Dismiss</button>
+                <button onclick="showToast('Provider contact updated')" class="px-2.5 py-1 bg-teal-600 hover:bg-teal-500 text-white rounded font-semibold">Accept Update</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 6: HEALTHCARE ALERTS & PARTNER OFFERS -->
+        <!-- ========================================================================= -->
+        <div id="tab-communications" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Communications, Advisories & Partner Offers</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Strict separation enforced: Promotional offers are completely segregated from clinical alerts.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openModal('quick-alert-modal')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-semibold flex items-center transition shadow-lg shadow-teal-600/20">
+                <i data-lucide="plus" class="w-3.5 h-3.5 mr-1.5"></i> Compose Health Advisory
+              </button>
+            </div>
+          </div>
+
+          <!-- Strict Separation: Two Panels -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- PANEL A: CLINICAL HEALTH ADVISORIES -->
+            <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                  <h3 class="text-sm font-semibold text-white">Public Health Advisories</h3>
+                </div>
+                <span class="text-xs text-teal-400 font-mono">Clinical Alerts</span>
+              </div>
+
+              <!-- Active Alert Card 1 -->
+              <div class="p-3.5 rounded-xl bg-slate-800/80 border border-teal-500/20 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-teal-300">Seasonal Influenza Advisory 2026</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">Published</span>
+                </div>
+                <p class="text-xs text-slate-300">Annual influenza vaccination is recommended for children and seniors ahead of the winter season.</p>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-700/60 font-mono">
+                  <span>Audience: All Family Profiles</span>
+                  <span>Expires: 31 Dec 2026</span>
+                </div>
+              </div>
+
+              <!-- Active Alert Card 2 -->
+              <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-amber-300">Dengue Prevention Notice</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">Published</span>
+                </div>
+                <p class="text-xs text-slate-300">Increased cases detected in Delhi-NCR. Check your home for stagnant water and ensure timely hydration.</p>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-700/60 font-mono">
+                  <span>Audience: Northern Region</span>
+                  <span>Expires: 15 Dec 2026</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- PANEL B: COMMERCIAL PARTNER OFFERS -->
+            <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+                  <h3 class="text-sm font-semibold text-white">Commercial Partner Discounts</h3>
+                </div>
+                <span class="text-xs text-blue-400 font-mono">Offers</span>
+              </div>
+
+              <!-- Offer 1 -->
+              <div class="p-3.5 rounded-xl bg-slate-800/80 border border-blue-500/20 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-blue-300">20% Off Comprehensive Health Checkup</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-300">Partner: City Diagnostics</span>
+                </div>
+                <p class="text-xs text-slate-300">Exclusive discount on Complete Blood Count + Lipid Profile package for MediVault members.</p>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-700/60">
+                  <span class="font-mono">Code: MEDIVAULT20</span>
+                  <span class="text-emerald-400">328 Redemptions</span>
+                </div>
+              </div>
+
+              <!-- Offer 2 -->
+              <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-blue-300">Free Dental Scaling Consultation</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-300">Partner: Dr. Meera Shah</span>
+                </div>
+                <p class="text-xs text-slate-300">Complimentary dental checkup and routine cleaning session for all primary account holders.</p>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-700/60">
+                  <span class="font-mono">Code: DENTOCARE</span>
+                  <span class="text-emerald-400">142 Redemptions</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 7: SUPPORT, TICKETING & HELPDESK -->
+        <!-- ========================================================================= -->
+        <div id="tab-support" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Support Tickets & Case Resolution</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Triage customer issues: Document upload help, password-protected PDFs, and billing.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-slate-400">3 Open Cases</span>
+            </div>
+          </div>
+
+          <!-- Tickets Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">Case ID</th>
+                    <th class="py-3 px-4">Customer</th>
+                    <th class="py-3 px-4">Subject & Description</th>
+                    <th class="py-3 px-4">Category</th>
+                    <th class="py-3 px-4">Priority</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                  
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-mono text-teal-400">#DEMO-001</td>
+                    <td class="py-3 px-4 font-medium text-white">Vikram Sharma</td>
+                    <td class="py-3 px-4">
+                      <div class="font-semibold text-slate-200">Document upload help</div>
+                      <div class="text-[11px] text-slate-400">User would like assistance unlocking a password-protected PDF.</div>
+                    </td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300">Upload Issue</span></td>
+                    <td class="py-3 px-4"><span class="text-amber-400 font-semibold">Medium</span></td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300">Open</span></td>
+                    <td class="py-3 px-4 text-right">
+                      <button onclick="openSupportModal('DEMO-001', 'Vikram Sharma', 'Document upload help')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Handle Ticket
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-mono text-teal-400">#DEMO-002</td>
+                    <td class="py-3 px-4 font-medium text-white">Deepak Sharma</td>
+                    <td class="py-3 px-4">
+                      <div class="font-semibold text-slate-200">Emergency card QR not scanning in dark mode</div>
+                      <div class="text-[11px] text-slate-400">Reported low contrast when viewing QR card from older smartphone.</div>
+                    </td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300">App Bug</span></td>
+                    <td class="py-3 px-4"><span class="text-rose-400 font-semibold">High</span></td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-blue-500/20 text-blue-300">In Progress</span></td>
+                    <td class="py-3 px-4 text-right">
+                      <button onclick="openSupportModal('DEMO-002', 'Deepak Sharma', 'Emergency card QR contrast')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded text-xs font-semibold border border-slate-700">
+                        Handle Ticket
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 8: SUBSCRIPTIONS, PRICING & INVOICING -->
+        <!-- ========================================================================= -->
+        <div id="tab-billing" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Subscriptions, Family Bundles & Invoicing</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Manage pricing tiers (Free vs ₹499/member/month), GST invoices, and transaction logs.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="showToast('Tax invoice generated')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium border border-slate-700">
+                <i data-lucide="receipt" class="w-3.5 h-3.5 inline mr-1 text-teal-400"></i> Sample GST Invoice
+              </button>
+            </div>
+          </div>
+
+          <!-- Subscription Plans Comparison -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Plan 1: Free -->
+            <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-white">Free Health Locker</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300">₹0 / month</span>
+              </div>
+              <p class="text-xs text-slate-400">Basic health records storage for individuals and small households.</p>
+              <ul class="text-xs text-slate-300 space-y-1.5 pt-2 border-t border-slate-800">
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Up to 1 GB encrypted cloud storage</li>
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Up to 2 family members linked</li>
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Standard doctor record sharing (24h expiry)</li>
+                <li class="flex items-center text-slate-500"><i data-lucide="x" class="w-3.5 h-3.5 mr-2"></i> Unlimited OCR full-text search</li>
+              </ul>
+              <div class="pt-3">
+                <span class="text-[11px] text-slate-400 font-mono">11,982 Users on Free Tier</span>
+              </div>
+            </div>
+
+            <!-- Plan 2: Family Care Premium -->
+            <div class="bg-gradient-to-br from-slate-900 to-teal-950/40 p-5 rounded-xl border border-teal-500/30 space-y-3 relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-base font-bold text-white flex items-center">
+                    Family Care Premium
+                    <span class="ml-2 px-2 py-0.2 rounded text-[10px] font-semibold bg-teal-400/20 text-teal-300 border border-teal-400/30">Active</span>
+                  </h3>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500 text-slate-950">₹499 / member / mo</span>
+              </div>
+              <p class="text-xs text-slate-300">Complete family health companion with unlimited vaulting & emergency features.</p>
+              <ul class="text-xs text-slate-200 space-y-1.5 pt-2 border-t border-teal-500/20">
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> <strong>Unlimited</strong> encrypted document vaulting</li>
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Up to 6 family members covered</li>
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Full OCR search across all handwritten prescriptions</li>
+                <li class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-400 mr-2"></i> Emergency QR Card + Medical ID export</li>
+              </ul>
+              <div class="pt-3 flex items-center justify-between">
+                <span class="text-[11px] text-teal-300 font-mono">858 Subscribed Families</span>
+                <span class="text-xs font-bold text-emerald-400">MRR: ₹4,28,400</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 class="text-xs font-semibold text-white uppercase tracking-wider">Recent Payment Transactions</h3>
+              <span class="text-[11px] text-slate-400 font-mono">Gateway: Razorpay Automated</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">Transaction ID</th>
+                    <th class="py-3 px-4">Customer</th>
+                    <th class="py-3 px-4">Amount</th>
+                    <th class="py-3 px-4">Members</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4 text-right">Invoice</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-mono text-teal-400">TXN_982319_RZP</td>
+                    <td class="py-3 px-4 text-white font-medium">Vikram Sharma</td>
+                    <td class="py-3 px-4 font-mono font-bold text-white">₹1,996</td>
+                    <td class="py-3 px-4">4 Members (₹499 ea)</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300">Success</span></td>
+                    <td class="py-3 px-4 font-mono text-slate-400">24 Nov 2026</td>
+                    <td class="py-3 px-4 text-right">
+                      <button onclick="showToast('Downloading GST Invoice for TXN_982319')" class="text-teal-400 hover:underline">Download PDF</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 9: SECURITY, AUDIT TRAIL & RBAC -->
+        <!-- ========================================================================= -->
+        <div id="tab-security" class="tab-pane hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-white tracking-tight">Security Telemetry, Audit Logs & RBAC</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Immutable administrative audit trail. Every privileged access is logged under the DPDP Act.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <i data-lucide="lock" class="w-3.5 h-3.5 inline mr-1"></i> 2FA Enforced for All Admins
+              </span>
+            </div>
+          </div>
+
+          <!-- Security Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Active Admin Staff</span>
+              <div class="text-xl font-bold text-white mt-1">4 Operators</div>
+              <p class="text-[11px] text-teal-400 mt-1">Super Admin, Support, Content, Compliance</p>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Session Timeout Auto-Lock</span>
+              <div class="text-xl font-bold text-white mt-1">15 Minutes</div>
+              <p class="text-[11px] text-slate-400 mt-1">Inactivity lockout active</p>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-xs text-slate-400">Emergency Profile Scans</span>
+              <div class="text-xl font-bold text-emerald-400 mt-1">18 Scans Today</div>
+              <p class="text-[11px] text-slate-400 mt-1">100% verified QR handoffs</p>
+            </div>
+          </div>
+
+          <!-- Audit Logs Table -->
+          <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 class="text-xs font-semibold text-white uppercase tracking-wider">Immutable Administrative Activity Log</h3>
+              <button onclick="exportAuditReport()" class="text-xs text-teal-400 hover:underline">Export CSV Log</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs font-mono">
+                <thead class="bg-slate-850 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-semibold">
+                  <tr>
+                    <th class="py-3 px-4">Timestamp</th>
+                    <th class="py-3 px-4">Operator</th>
+                    <th class="py-3 px-4">Action</th>
+                    <th class="py-3 px-4">Target Entity</th>
+                    <th class="py-3 px-4">IP Address</th>
+                    <th class="py-3 px-4">Result</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-2.5 px-4 text-slate-400">2026-11-25 18:42:10</td>
+                    <td class="py-2.5 px-4 text-teal-400 font-semibold">vikram.sharma (Super Admin)</td>
+                    <td class="py-2.5 px-4 text-white">BREAK_GLASS_DECRYPT</td>
+                    <td class="py-2.5 px-4 text-slate-300">REC-1082 (Protected_Report.pdf)</td>
+                    <td class="py-2.5 px-4 text-slate-400">103.21.244.18</td>
+                    <td class="py-2.5 px-4 text-emerald-400">AUTHORIZED</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-2.5 px-4 text-slate-400">2026-11-25 17:15:02</td>
+                    <td class="py-2.5 px-4 text-teal-400 font-semibold">support.agent (Support)</td>
+                    <td class="py-2.5 px-4 text-white">SUPPORT_TICKET_RESOLVE</td>
+                    <td class="py-2.5 px-4 text-slate-300">#DEMO-001</td>
+                    <td class="py-2.5 px-4 text-slate-400">103.21.244.22</td>
+                    <td class="py-2.5 px-4 text-emerald-400">RESOLVED</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-2.5 px-4 text-slate-400">2026-11-25 16:04:45</td>
+                    <td class="py-2.5 px-4 text-teal-400 font-semibold">content.admin (Content)</td>
+                    <td class="py-2.5 px-4 text-white">PUBLISH_HEALTH_ALERT</td>
+                    <td class="py-2.5 px-4 text-slate-300">ALERT_FLU_2026</td>
+                    <td class="py-2.5 px-4 text-slate-400">182.74.120.10</td>
+                    <td class="py-2.5 px-4 text-emerald-400">BROADCASTED</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="py-2.5 px-4 text-slate-400">2026-11-25 14:22:18</td>
+                    <td class="py-2.5 px-4 text-teal-400 font-semibold">compliance.officer (Compliance)</td>
+                    <td class="py-2.5 px-4 text-white">DPDP_AUDIT_EXPORT</td>
+                    <td class="py-2.5 px-4 text-slate-300">ALL_CONSENTS_Q3</td>
+                    <td class="py-2.5 px-4 text-slate-400">103.21.244.18</td>
+                    <td class="py-2.5 px-4 text-emerald-400">DOWNLOADED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: BREAK-GLASS PRIVACY PROTOCOL MODAL -->
+  <!-- ========================================================================= -->
+  <div id="break-glass-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2 text-rose-400 font-bold text-sm">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          <span>Break-Glass Privacy Protocol</span>
+        </div>
+        <button onclick="closeModal('break-glass-modal')" class="text-slate-400 hover:text-white p-1 rounded">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3 text-xs text-rose-300">
+        <strong>Protected Health Information (PHI) Notice:</strong><br>
+        Under the Digital Personal Data Protection (DPDP) Act, medical files are cryptographically protected. Viewing raw patient documents requires logged clinical or operational justification.
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Target Document</label>
+          <input type="text" id="break-glass-doc-title" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Mandatory Justification Reason</label>
+          <select id="break-glass-reason" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200">
+            <option>Customer support request for document unblurring</option>
+            <option>OCR failure debugging with explicit patient permission</option>
+            <option>Emergency clinical access validation</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Admin 2FA Security Code</label>
+          <input type="password" placeholder="Enter 6-digit TOTP code (e.g. 123456)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 font-mono">
+        </div>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+        <button onclick="closeModal('break-glass-modal')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">Cancel</button>
+        <button onclick="confirmBreakGlass()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition flex items-center shadow-lg shadow-rose-600/20">
+          <i data-lucide="unlock" class="w-3.5 h-3.5 mr-1.5"></i> Authorize & Decrypt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: USER PROFILE 360° DRAWER -->
+  <!-- ========================================================================= -->
+  <div id="user-drawer" class="fixed inset-y-0 right-0 w-full max-w-lg bg-slate-900 border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div id="drawer-avatar" class="w-10 h-10 rounded-full bg-teal-500/20 text-teal-400 font-bold flex items-center justify-center text-sm">VS</div>
+        <div>
+          <h3 id="drawer-name" class="text-base font-bold text-white">Vikram Sharma</h3>
+          <p id="drawer-id" class="text-xs text-slate-400 font-mono">USR-9021 · Account Owner</p>
+        </div>
+      </div>
+      <button onclick="closeUserDrawer()" class="text-slate-400 hover:text-white p-1 rounded">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scroll text-xs">
+      
+      <!-- Account Info -->
+      <div class="bg-slate-850 p-4 rounded-xl border border-slate-800 space-y-2">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-teal-400">Subscription & Storage</span>
+        <div class="flex justify-between text-slate-300">
+          <span>Active Plan:</span>
+          <strong class="text-emerald-400">Family Care Premium (₹499/mo)</strong>
+        </div>
+        <div class="flex justify-between text-slate-300">
+          <span>Storage Consumed:</span>
+          <strong class="text-white font-mono">1.2 GB of 50 GB</strong>
+        </div>
+        <div class="flex justify-between text-slate-300">
+          <span>Registered Since:</span>
+          <span class="text-slate-400">04 Nov 2026</span>
+        </div>
+      </div>
+
+      <!-- Family Circle Hierarchy -->
+      <div>
+        <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-2">Linked Family Circle (4 Profiles)</h4>
+        <div class="space-y-2" id="drawer-family-list">
+          <!-- Item 1 -->
+          <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+              <div>
+                <strong class="text-white">Vikram Sharma</strong> (Self, 40 yrs)
+                <p class="text-[10px] text-slate-400">Blood: B+ · Emergency QR Active</p>
+              </div>
+            </div>
+            <span class="font-mono text-teal-400">24 records</span>
+          </div>
+          <!-- Item 2 -->
+          <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+              <div>
+                <strong class="text-white">Pooja Sharma</strong> (Wife, 37 yrs)
+                <p class="text-[10px] text-slate-400">Blood: O+ · Regular Dental Care</p>
+              </div>
+            </div>
+            <span class="font-mono text-teal-400">16 records</span>
+          </div>
+          <!-- Item 3 -->
+          <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+              <div>
+                <strong class="text-white">Aarav Sharma</strong> (Son, 8 yrs)
+                <p class="text-[10px] text-slate-400">Blood: B+ · Vaccination Due Dec 2026</p>
+              </div>
+            </div>
+            <span class="font-mono text-teal-400">8 records</span>
+          </div>
+          <!-- Item 4 -->
+          <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+              <div>
+                <strong class="text-white">Deepak Sharma</strong> (Father, 68 yrs)
+                <p class="text-[10px] text-slate-400">Blood: B+ · Cardiac & Ortho History</p>
+              </div>
+            </div>
+            <span class="font-mono text-teal-400">12 records</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Sessions -->
+      <div>
+        <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-2">Active Logged-In Sessions</h4>
+        <div class="space-y-2">
+          <div class="p-3 bg-slate-800/40 rounded-lg border border-slate-700/50 flex items-center justify-between text-[11px]">
+            <div>
+              <div class="text-white font-semibold">iPhone 15 Pro (MediVault iOS App)</div>
+              <div class="text-slate-400">New Delhi · Last active: Just now</div>
+            </div>
+            <span class="text-emerald-400 font-mono">Current</span>
+          </div>
+          <div class="p-3 bg-slate-800/40 rounded-lg border border-slate-700/50 flex items-center justify-between text-[11px]">
+            <div>
+              <div class="text-white font-semibold">Chrome Browser (Windows 11)</div>
+              <div class="text-slate-400">Delhi-NCR · Last active: 2 hours ago</div>
+            </div>
+            <button onclick="showToast('Remote session terminated')" class="text-rose-400 hover:underline">Kill</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Governance Actions -->
+      <div class="pt-4 border-t border-slate-800 space-y-2">
+        <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Account Governance</h4>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="showToast('Export archive dispatched to user email')" class="py-2 bg-slate-800 hover:bg-slate-700 text-teal-400 rounded-lg font-semibold border border-slate-700">
+            Export ZIP Archive
+          </button>
+          <button onclick="showToast('Account suspended')" class="py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg font-semibold">
+            Suspend Account
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: QUICK BROADCAST HEALTH ALERT MODAL -->
+  <!-- ========================================================================= -->
+  <div id="quick-alert-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2 text-teal-400 font-bold text-sm">
+          <i data-lucide="megaphone" class="w-5 h-5"></i>
+          <span>Compose Public Health Advisory</span>
+        </div>
+        <button onclick="closeModal('quick-alert-modal')" class="text-slate-400 hover:text-white p-1 rounded">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <form onsubmit="handleAlertSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Advisory Title</label>
+          <input type="text" id="alert-title-input" required placeholder="e.g. Seasonal Influenza Vaccination Advisory" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Message Body</label>
+          <textarea id="alert-body-input" rows="3" required placeholder="Detail the medical guidance, due dates or prevention steps..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Target Audience</label>
+            <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200">
+              <option>All Family Profiles</option>
+              <option>Account Owners Only</option>
+              <option>Families with Children (0-12 yrs)</option>
+              <option>Senior Citizen Profiles (60+ yrs)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Valid Until</label>
+            <input type="date" value="2026-12-31" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200">
+          </div>
+        </div>
+        <div class="p-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-teal-300 text-[11px]">
+          <strong>Separation Policy:</strong> This advisory will appear in the health feed and will never be mixed with commercial marketing.
+        </div>
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModal('quick-alert-modal')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white transition flex items-center shadow-lg shadow-teal-600/20">
+            <i data-lucide="send" class="w-3.5 h-3.5 mr-1.5"></i> Publish Advisory
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: SUPPORT TICKET RESOLUTION MODAL -->
+  <!-- ========================================================================= -->
+  <div id="support-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2 text-teal-400 font-bold text-sm">
+          <i data-lucide="life-buoy" class="w-5 h-5"></i>
+          <span id="support-ticket-id">Case #DEMO-001</span>
+        </div>
+        <button onclick="closeModal('support-modal')" class="text-slate-400 hover:text-white p-1 rounded">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="text-xs space-y-2">
+        <div class="text-slate-400">Customer: <strong class="text-white" id="support-customer-name">Vikram Sharma</strong></div>
+        <div class="text-slate-400">Subject: <span class="text-slate-200 font-semibold" id="support-subject">Document upload help</span></div>
+        <div class="p-3 bg-slate-800/80 rounded-lg border border-slate-700/60 text-slate-300">
+          "I uploaded my hospital bill and prescription from City Diagnostics, but the PDF is asking for a password that I received on SMS. Can you help me index it?"
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1 mt-3">Internal Agent Note</label>
+          <textarea rows="2" placeholder="Add resolution note for compliance logs..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"></textarea>
+        </div>
+      </div>
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <button onclick="showToast('Requested document rescan via in-app push')" class="text-teal-400 hover:underline text-xs">Request In-App Re-Scan</button>
+        <button onclick="resolveTicketAction()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold">
+          Mark as Resolved
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- ========================================================================= -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLERS & DATA STORE -->
+  <!-- ========================================================================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Tab Navigation State
+    let currentTab = 'dashboard';
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+
+      // Update Nav Buttons
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active', 'text-teal-400', 'bg-teal-500/10', 'border', 'border-teal-500/20');
+        btn.classList.add('text-slate-400');
+      });
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.classList.add('active', 'text-teal-400', 'bg-teal-500/10', 'border', 'border-teal-500/20');
+        activeNav.classList.remove('text-slate-400');
+      }
+
+      // Hide all panes & show active pane
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.add('hidden'));
+      const activePane = document.getElementById('tab-' + tabId);
+      if (activePane) {
+        activePane.classList.remove('hidden');
+      }
+
+      // Update Breadcrumb
+      const breadcrumb = document.getElementById('breadcrumb-title');
+      const titles = {
+        dashboard: 'Executive Dashboard',
+        users: 'User Accounts & Family Circles',
+        records: 'Document Locker Explorer',
+        ocr: 'OCR Pipeline Queue',
+        discovery: 'Nearby Healthcare Discovery',
+        communications: 'Alerts & Partner Offers',
+        support: 'Support & Helpdesk',
+        billing: 'Subscriptions & Invoicing',
+        security: 'Audit Logs & RBAC Telemetry'
+      };
+      if (breadcrumb && titles[tabId]) {
+        breadcrumb.innerText = titles[tabId];
+      }
+
+      // Re-trigger icon rendering
+      setTimeout(() => lucide.createIcons(), 50);
+    }
+
+    // Modal Handlers
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Break Glass Modal Handlers
+    function openBreakGlassModal(recordId, recordTitle) {
+      document.getElementById('break-glass-doc-title').value = `${recordTitle} (REC-${1000 + recordId})`;
+      openModal('break-glass-modal');
+    }
+
+    function confirmBreakGlass() {
+      closeModal('break-glass-modal');
+      showToast('Break-Glass Authorized: Decrypted preview loaded under audit log #SEC-8921');
+    }
+
+    // User Profile Drawer Handlers
+    function openUserDrawer(memberKey) {
+      const drawer = document.getElementById('user-drawer');
+      drawer.classList.remove('translate-x-full');
+
+      const profiles = {
+        vikram: { name: 'Vikram Sharma', id: 'USR-9021', initials: 'VS', role: 'Self (Account Owner)', color: 'bg-teal-500/20 text-teal-400' },
+        pooja: { name: 'Pooja Sharma', id: 'USR-9022', initials: 'PS', role: 'Wife (Dependent)', color: 'bg-rose-500/20 text-rose-400' },
+        aarav: { name: 'Aarav Sharma', id: 'USR-9023', initials: 'AS', role: 'Son (Minor Dependent)', color: 'bg-blue-500/20 text-blue-400' },
+        deepak: { name: 'Deepak Sharma', id: 'USR-9024', initials: 'DS', role: 'Father (Senior Dependent)', color: 'bg-purple-500/20 text-purple-400' }
+      };
+
+      const p = profiles[memberKey] || profiles.vikram;
+      document.getElementById('drawer-name').innerText = p.name;
+      document.getElementById('drawer-id').innerText = `${p.id} · ${p.role}`;
+      const av = document.getElementById('drawer-avatar');
+      av.innerText = p.initials;
+      av.className = `w-10 h-10 rounded-full font-bold flex items-center justify-center text-sm ${p.color}`;
+      lucide.createIcons();
+    }
+
+    function closeUserDrawer() {
+      const drawer = document.getElementById('user-drawer');
+      drawer.classList.add('translate-x-full');
+    }
+
+    // Support Modal Handlers
+    function openSupportModal(ticketId, customer, subject) {
+      document.getElementById('support-ticket-id').innerText = `Case #${ticketId}`;
+      document.getElementById('support-customer-name').innerText = customer;
+      document.getElementById('support-subject').innerText = subject;
+      openModal('support-modal');
+    }
+
+    function resolveTicketAction() {
+      closeModal('support-modal');
+      showToast('Ticket marked as Resolved & customer notified');
+    }
+
+    // Alert Publishing Handler
+    function handleAlertSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('alert-title-input').value;
+      closeModal('quick-alert-modal');
+      showToast(`Advisory "${title}" published across active family feeds!`);
+      document.getElementById('alert-title-input').value = '';
+      document.getElementById('alert-body-input').value = '';
+    }
+
+    // Category Filter for Records Table
+    function filterRecordsByCategory(cat) {
+      document.querySelectorAll('.cat-pill').forEach(p => {
+        p.classList.remove('active', 'bg-teal-500', 'text-slate-950', 'font-bold');
+        p.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      event.target.classList.add('active', 'bg-teal-500', 'text-slate-950', 'font-bold');
+      event.target.classList.remove('bg-slate-800', 'text-slate-300');
+
+      const rows = document.querySelectorAll('#records-table-body tr');
+      rows.forEach(r => {
+        if (cat === 'all' || r.getAttribute('data-category') === cat) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+    }
+
+    // User Table Filter
+    function filterUserTable(query) {
+      const q = query.toLowerCase();
+      const rows = document.querySelectorAll('#users-table-body tr');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    // Global Search Handler (Ctrl+K)
+    function handleGlobalSearch(e) {
+      const q = e.target.value.toLowerCase();
+      if (!q) return;
+      if (e.key === 'Enter') {
+        if (q.includes('vikram') || q.includes('user') || q.includes('family')) {
+          switchTab('users');
+        } else if (q.includes('prescription') || q.includes('blood') || q.includes('record')) {
+          switchTab('records');
+        } else if (q.includes('ocr') || q.includes('scan')) {
+          switchTab('ocr');
+        } else if (q.includes('ticket') || q.includes('help')) {
+          switchTab('support');
+        } else {
+          switchTab('records');
+        }
+        showToast(`Filtered results for "${q}"`);
+      }
+    }
+
+    // Keyboard shortcut for Cmd+K / Ctrl+K
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('global-search-input');
+        if (searchInput) searchInput.focus();
+      }
+    });
+
+    // Toast Notification Utility
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'bg-slate-800 text-white border border-teal-500/30 px-4 py-2.5 rounded-xl shadow-2xl flex items-center space-x-2 text-xs transform transition-all duration-300 translate-y-4 opacity-0 pointer-events-auto';
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function toggleNotifications() {
+      const dd = document.getElementById('notifications-dropdown');
+      dd.classList.toggle('hidden');
+    }
+
+    function clearNotifications() {
+      const dd = document.getElementById('notifications-dropdown');
+      dd.classList.add('hidden');
+      showToast('All notifications marked as read');
+    }
+
+    function exportAuditReport() {
+      showToast('Generating encrypted CSV compliance log export...');
+      setTimeout(() => {
+        showToast('Audit report downloaded: MediVault_Audit_Nov2026.csv');
+      }, 1000);
+    }
+
+    function simulateOCRJob() {
+      showToast('Sample document submitted to OCR pipeline queue...');
+      setTimeout(() => {
+        showToast('OCR Job #OCR-8824 completed with 99.4% confidence rating');
+      }, 1500);
+    }
+
+    function filterDateRange(val) {
+      showToast(`Metrics filtered for: ${val.toUpperCase()}`);
+    }
+
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('-translate-x-full');
+    }
+
+    // Initialize Chart.js Graphs on load
+    window.addEventListener('DOMContentLoaded', () => {
+      
+      // Chart 1: Ingestion Line Chart
+      const ctx1 = document.getElementById('ingestionChart')?.getContext('2d');
+      if (ctx1) {
+        new Chart(ctx1, {
+          type: 'line',
+          data: {
+            labels: ['12 Nov', '14 Nov', '16 Nov', '18 Nov', '20 Nov', '22 Nov', '24 Nov'],
+            datasets: [
+              {
+                label: 'Camera Scans',
+                data: [120, 190, 240, 280, 310, 390, 480],
+                borderColor: '#2dd4bf',
+                backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 2
+              },
+              {
+                label: 'Digital PDFs',
+                data: [80, 110, 140, 160, 210, 260, 310],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                ticks: { color: '#94a3b8', font: { size: 10 } }
+              },
+              y: {
+                grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                ticks: { color: '#94a3b8', font: { size: 10 } }
+              }
+            }
+          }
+        });
+      }
+
+      // Chart 2: Category Donut Chart
+      const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
+      if (ctx2) {
+        new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Prescriptions', 'Lab Reports', 'Dental Care', 'Vaccines', 'Radiology', 'Others'],
+            datasets: [{
+              data: [32, 24, 14, 12, 10, 8],
+              backgroundColor: [
+                '#14b8a6', // Teal
+                '#3b82f6', // Blue
+                '#f59e0b', // Amber
+                '#f43f5e', // Rose
+                '#a855f7', // Purple
+                '#64748b'  // Slate
+              ],
+              borderWidth: 0,
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
