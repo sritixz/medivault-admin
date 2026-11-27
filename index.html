@@ -83,11 +83,14 @@
 
 <body class="h-full bg-[#EEF4FA] text-[#122331] dark:bg-[#111922] dark:text-[#E6EDF3] font-sans antialiased overflow-hidden flex transition-colors duration-200">
 
+  <!-- ================= SIDEBAR BACKDROP (Mobile) ================= -->
+  <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-[#122331]/40 backdrop-blur-sm z-30 hidden lg:hidden"></div>
+
   <!-- ================= SIDEBAR (Clean White Practo-Style) ================= -->
-  <aside id="sidebar" class="w-60 bg-white dark:bg-[#18232E] border-r border-[#E4ECF2] dark:border-[#243442] flex flex-col shrink-0 z-20 transition-all duration-300">
+  <aside id="sidebar" class="fixed inset-y-0 left-0 lg:static w-64 lg:w-60 -translate-x-full lg:translate-x-0 bg-white dark:bg-[#18232E] border-r border-[#E4ECF2] dark:border-[#243442] flex flex-col shrink-0 z-40 lg:z-20 transition-transform duration-300">
     
     <!-- Brand -->
-    <div class="h-20 flex items-center px-6">
+    <div class="h-16 sm:h-20 flex items-center justify-between px-6">
       <div class="flex items-center space-x-3">
         <div class="w-9 h-9 rounded-xl bg-[#07576B] flex items-center justify-center shadow-sm">
           <i data-lucide="shield-plus" class="w-5 h-5 text-white"></i>
@@ -97,6 +100,9 @@
           <p class="text-[11px] text-[#65727B] dark:text-slate-400 -mt-1">Admin Console</p>
         </div>
       </div>
+      <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-[#65727B] hover:bg-[#F3F8FC] dark:hover:bg-[#202E3C]" aria-label="Close navigation">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
     </div>
 
     <!-- Navigation -->
@@ -152,40 +158,40 @@
   </aside>
 
   <!-- ================= MAIN AREA ================= -->
-  <div class="flex-1 flex flex-col overflow-hidden">
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
     <!-- TOP HEADER (Airy White Strip) -->
-    <header class="h-20 bg-white/90 dark:bg-[#18232E]/90 backdrop-blur border-b border-[#E4ECF2] dark:border-[#243442] px-7 flex items-center justify-between shrink-0 z-10">
+    <header class="h-16 sm:h-20 bg-white/90 dark:bg-[#18232E]/90 backdrop-blur border-b border-[#E4ECF2] dark:border-[#243442] px-4 sm:px-7 flex items-center justify-between gap-2 shrink-0 z-10">
       
       <!-- Search Bar -->
-      <div class="flex items-center space-x-4 flex-1 max-w-md">
-        <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-[#65727B] hover:bg-[#EEF4FA] dark:hover:bg-[#202E3C]">
+      <div class="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0 max-w-md">
+        <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-[#65727B] hover:bg-[#EEF4FA] dark:hover:bg-[#202E3C] shrink-0" aria-label="Open navigation">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
-        <div class="relative w-full">
-          <i data-lucide="search" class="w-4 h-4 text-[#85929C] absolute left-4 top-3"></i>
-          <input type="text" id="global-search-input" onkeyup="handleGlobalSearch(event)" placeholder="Search user name, record, or case ID..." 
-                 class="w-full bg-[#F6F9FC] dark:bg-[#111922] border border-[#DFE8F0] dark:border-[#2B3D4E] rounded-full pl-10 pr-4 py-2.5 text-xs text-[#122331] dark:text-slate-200 placeholder-[#85929C] focus:outline-none focus:border-[#07576B] transition">
+        <div class="relative w-full min-w-0">
+          <i data-lucide="search" class="w-4 h-4 text-[#85929C] absolute left-3.5 sm:left-4 top-2.5 sm:top-3"></i>
+          <input type="text" id="global-search-input" onkeyup="handleGlobalSearch(event)" placeholder="Search user, record, case..." 
+                 class="w-full bg-[#F6F9FC] dark:bg-[#111922] border border-[#DFE8F0] dark:border-[#2B3D4E] rounded-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 text-xs text-[#122331] dark:text-slate-200 placeholder-[#85929C] focus:outline-none focus:border-[#07576B] transition">
         </div>
       </div>
 
       <!-- Right Actions: Theme Toggle, Notification Bell, Super Admin Profile -->
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
         
         <!-- Gentle Theme Toggle -->
         <button onclick="toggleTheme()" title="Switch Light / Dark Theme"
-                class="w-10 h-10 rounded-full bg-[#F6F9FC] dark:bg-[#202E3C] border border-[#E4ECF2] dark:border-[#2B3D4E] flex items-center justify-center text-[#65727B] dark:text-slate-300 hover:text-[#07576B] dark:hover:text-teal-300 transition">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#F6F9FC] dark:bg-[#202E3C] border border-[#E4ECF2] dark:border-[#2B3D4E] flex items-center justify-center text-[#65727B] dark:text-slate-300 hover:text-[#07576B] dark:hover:text-teal-300 transition">
           <i data-lucide="moon" class="w-4 h-4 inline dark:hidden"></i>
           <i data-lucide="sun" class="w-4 h-4 hidden dark:inline"></i>
         </button>
 
         <!-- Notification Bell -->
         <div class="relative">
-          <button onclick="toggleNotifications()" class="w-10 h-10 rounded-full bg-[#FFF8EB] dark:bg-[#202E3C] border border-[#F5E7CE] dark:border-[#2B3D4E] flex items-center justify-center text-[#D48A29] dark:text-amber-300 transition relative">
+          <button onclick="toggleNotifications()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFF8EB] dark:bg-[#202E3C] border border-[#F5E7CE] dark:border-[#2B3D4E] flex items-center justify-center text-[#D48A29] dark:text-amber-300 transition relative">
             <i data-lucide="bell" class="w-4 h-4"></i>
-            <span class="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-[#E26D5A]"></span>
+            <span class="absolute top-2 right-2 sm:right-2.5 w-2 h-2 rounded-full bg-[#E26D5A]"></span>
           </button>
-          <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-[#18232E] border border-[#E4ECF2] dark:border-[#2B3D4E] rounded-2xl shadow-xl p-4 z-50">
+          <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-80 bg-white dark:bg-[#18232E] border border-[#E4ECF2] dark:border-[#2B3D4E] rounded-2xl shadow-xl p-4 z-50">
             <div class="flex items-center justify-between pb-2.5 border-b border-[#EEF4FA] dark:border-[#243442] text-xs font-bold">
               <span>Notifications</span>
               <button onclick="clearNotifications()" class="text-[#07576B] dark:text-teal-300 text-[11px] font-semibold hover:underline">Mark read</button>
@@ -218,7 +224,7 @@
     </header>
 
     <!-- CONTENT CANVAS -->
-    <main class="flex-1 overflow-y-auto p-6 space-y-6">
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6">
 
       <!-- ========================================================================= -->
       <!-- TAB 1: DASHBOARD (Practo Bento Layout) -->
@@ -559,7 +565,7 @@
           <!-- Left: Period Filter & Quick Actions -->
           <div class="lg:col-span-4 bg-white dark:bg-[#18232E] card-gentle p-6 border border-[#E6EEF5] dark:border-[#243442] flex flex-col justify-between">
             <div>
-              <div class="flex items-center space-x-2 mb-4">
+              <div class="flex flex-wrap gap-2 mb-4">
                 <button onclick="setPeriodPill(this, 'Today')" class="period-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#07576B] text-white">Today</button>
                 <button onclick="setPeriodPill(this, 'Last 7 days')" class="period-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-[#F3F8FC] dark:bg-[#202E3C] text-[#65727B] dark:text-slate-300">Last 7 days</button>
                 <button onclick="setPeriodPill(this, 'Last month')" class="period-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-[#F3F8FC] dark:bg-[#202E3C] text-[#65727B] dark:text-slate-300">Last month</button>
@@ -848,7 +854,8 @@
         </div>
 
         <div class="bg-white dark:bg-[#18232E] card-gentle border border-[#E6EEF5] dark:border-[#243442] overflow-hidden">
-          <table class="w-full text-left text-xs">
+          <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[600px]">
             <thead class="bg-[#F6F9FC] dark:bg-[#141D26] text-[#65727B] border-b border-[#E6EEF5] dark:border-[#243442] text-[11px] font-semibold">
               <tr>
                 <th class="py-3.5 px-5">Job</th>
@@ -886,6 +893,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -1051,7 +1059,8 @@
         </div>
 
         <div class="bg-white dark:bg-[#18232E] card-gentle border border-[#E6EEF5] dark:border-[#243442] overflow-hidden">
-          <table class="w-full text-left text-xs">
+          <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[600px]">
             <thead class="bg-[#F6F9FC] dark:bg-[#141D26] text-[#65727B] border-b border-[#E6EEF5] dark:border-[#243442] text-[11px] font-semibold">
               <tr>
                 <th class="py-3.5 px-5">Case</th>
@@ -1081,6 +1090,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -1114,7 +1124,8 @@
         </div>
 
         <div class="bg-white dark:bg-[#18232E] card-gentle border border-[#E6EEF5] dark:border-[#243442] overflow-hidden">
-          <table class="w-full text-left text-xs">
+          <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[600px]">
             <thead class="bg-[#F6F9FC] dark:bg-[#141D26] text-[#65727B] border-b border-[#E6EEF5] dark:border-[#243442] text-[11px] font-semibold">
               <tr>
                 <th class="py-3.5 px-5">Transaction ID</th>
@@ -1136,6 +1147,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -1152,7 +1164,8 @@
         </div>
 
         <div class="bg-white dark:bg-[#18232E] card-gentle border border-[#E6EEF5] dark:border-[#243442] overflow-hidden">
-          <table class="w-full text-left text-xs">
+          <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[600px]">
             <thead class="bg-[#F6F9FC] dark:bg-[#141D26] text-[#65727B] border-b border-[#E6EEF5] dark:border-[#243442] text-[11px] font-semibold">
               <tr>
                 <th class="py-3.5 px-5">Timestamp</th>
@@ -1186,6 +1199,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -1349,6 +1363,10 @@
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
       const activePane = document.getElementById('tab-' + tabId);
       if (activePane) activePane.classList.remove('hidden');
+      if (window.innerWidth < 1024) {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+        document.getElementById('sidebar-backdrop').classList.add('hidden');
+      }
       setTimeout(() => lucide.createIcons(), 30);
     }
 
@@ -1444,7 +1462,16 @@
     function clearNotifications() { document.getElementById('notifications-dropdown').classList.add('hidden'); showToast('Notifications cleared'); }
     function exportAuditReport() { showToast('Exported MediVault_Audit_Nov2026.csv'); }
     function simulateOCRJob() { showToast('OCR job #OCR-8824 completed (99.4% confidence)'); }
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const isClosed = sb.classList.toggle('-translate-x-full');
+      if (isClosed) {
+        backdrop.classList.add('hidden');
+      } else {
+        backdrop.classList.remove('hidden');
+      }
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       const isDark = document.documentElement.classList.contains('dark');
