@@ -2,9 +2,16 @@
 
 Gentle, mobile-responsive administrative console and REST API for **MediVault** — the Personal Health Record, Family Health Locker & Healthcare Discovery Platform.
 
+## Folder Structure
+```text
+medivault-admin/
+├── client/          # Frontend (Practo-inspired index.html + Vite/Tailwind scaffolding)
+└── server/          # Backend (Express + MongoDB REST API, Super Admin auth & seeder)
+```
+
 ## Architecture
-- **Frontend**: Practo-inspired, pastel-themed responsive UI (`index.html`) with Light (default) & gentle Dark theme, Chart.js analytics, and live API hydration (with offline preview fallback).
-- **Backend**: Node.js + Express (`server/src/index.js`) with Helmet, CORS, and JWT authentication.
+- **Frontend (`client/`)**: Practo-inspired, pastel-themed responsive UI (`client/index.html`) with Light (default) & gentle Dark theme, Chart.js analytics, and live API hydration (with offline preview fallback).
+- **Backend (`server/`)**: Node.js + Express (`server/src/index.js`) with Helmet, CORS, and JWT authentication.
 - **Database**: MongoDB via Mongoose (`server/src/models/`).
 - **Role Scope**: `SUPER_ADMIN` only in v1 (other staff roles can be added later to `AdminUser`).
 

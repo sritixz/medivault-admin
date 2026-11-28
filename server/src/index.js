@@ -21,7 +21,7 @@ import auditRoutes from './routes/audit.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..', '..');
+const clientDir = path.resolve(__dirname, '..', '..', 'client');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -57,10 +57,10 @@ app.use('/api/tickets', requireSuperAdmin, supportRoutes);
 app.use('/api/billing', requireSuperAdmin, billingRoutes);
 app.use('/api/audit', requireSuperAdmin, auditRoutes);
 
-// Serve the standalone frontend index.html from repo root
-app.use(express.static(rootDir));
+// Serve the frontend from client/
+app.use(express.static(clientDir));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(rootDir, 'index.html'));
+  res.sendFile(path.join(clientDir, 'index.html'));
 });
 
 // Global Error Handler
