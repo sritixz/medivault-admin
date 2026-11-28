@@ -209,15 +209,18 @@
           </div>
         </div>
 
-        <!-- Super Admin Chip -->
-        <div class="flex items-center space-x-3 pl-2">
-          <div class="w-10 h-10 rounded-full bg-[#DFF3E9] dark:bg-teal-900/50 text-[#1B654E] dark:text-teal-300 font-bold text-xs flex items-center justify-center border-2 border-white dark:border-[#243442] shadow-sm">
+        <!-- Super Admin Chip & Auth Status -->
+        <div class="flex items-center space-x-2.5 pl-1 sm:pl-2">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#DFF3E9] dark:bg-teal-900/50 text-[#1B654E] dark:text-teal-300 font-bold text-xs flex items-center justify-center border-2 border-white dark:border-[#243442] shadow-sm">
             VS
           </div>
           <div class="hidden sm:block leading-tight">
-            <div class="text-xs font-bold text-[#122331] dark:text-white">Vikram Sharma</div>
+            <div class="text-xs font-bold text-[#122331] dark:text-white" id="header-admin-name">Vikram Sharma</div>
             <div class="text-[11px] text-[#65727B] dark:text-slate-400">Super Admin</div>
           </div>
+          <button id="auth-status-btn" onclick="handleAuthButtonClick()" class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FFF7E6] text-[#825122] hover:bg-[#FDEBC8] transition">
+            Connect API
+          </button>
         </div>
 
       </div>
@@ -866,7 +869,7 @@
                 <th class="py-3.5 px-5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
+            <tbody id="ocr-table-body" class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
               <tr>
                 <td class="py-4 px-5 font-semibold text-[#07576B] dark:text-teal-300">#OCR-8821</td>
                 <td class="py-4 px-5"><strong>Vikram Sharma</strong><br><span class="text-[11px] text-[#65727B]">Prescription_Nov2.pdf</span></td>
@@ -911,7 +914,7 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div id="providers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div class="bg-[#DCEEFB]/60 dark:bg-[#18232E] card-gentle p-5 border border-[#C8E2F6] dark:border-[#243442] flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between">
@@ -1007,7 +1010,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white dark:bg-[#18232E] card-gentle p-6 border border-[#E6EEF5] dark:border-[#243442] space-y-4">
+          <div id="advisories-list" class="bg-white dark:bg-[#18232E] card-gentle p-6 border border-[#E6EEF5] dark:border-[#243442] space-y-4">
             <h3 class="text-sm font-bold text-[#1B654E] dark:text-emerald-300">Public Health Advisories</h3>
             <div class="p-4 rounded-2xl bg-[#DFF3E9]/60 dark:bg-emerald-950/30 space-y-1.5">
               <div class="flex justify-between text-xs font-bold text-[#122331] dark:text-white">
@@ -1027,7 +1030,7 @@
             </div>
           </div>
 
-          <div class="bg-white dark:bg-[#18232E] card-gentle p-6 border border-[#E6EEF5] dark:border-[#243442] space-y-4">
+          <div id="offers-list" class="bg-white dark:bg-[#18232E] card-gentle p-6 border border-[#E6EEF5] dark:border-[#243442] space-y-4">
             <h3 class="text-sm font-bold text-[#0D5877] dark:text-sky-300">Commercial Partner Offers</h3>
             <div class="p-4 rounded-2xl bg-[#DCEEFB]/60 dark:bg-sky-950/30 space-y-1.5">
               <div class="flex justify-between text-xs font-bold text-[#122331] dark:text-white">
@@ -1071,7 +1074,7 @@
                 <th class="py-3.5 px-5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
+            <tbody id="support-table-body" class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
               <tr>
                 <td class="py-4 px-5 font-bold text-[#07576B]">#DEMO-001</td>
                 <td class="py-4 px-5 font-semibold">Vikram Sharma</td>
@@ -1136,7 +1139,7 @@
                 <th class="py-3.5 px-5 text-right">Invoice</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="billing-transactions-body">
               <tr>
                 <td class="py-4 px-5 font-semibold text-[#07576B]">TXN_982319_RZP</td>
                 <td class="py-4 px-5 font-semibold">Vikram Sharma (4 members)</td>
@@ -1175,7 +1178,7 @@
                 <th class="py-3.5 px-5">Result</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
+            <tbody id="audit-table-body" class="divide-y divide-[#F0F4F8] dark:divide-[#243442]">
               <tr>
                 <td class="py-3.5 px-5 text-[#65727B]">25 Nov 2026, 18:42</td>
                 <td class="py-3.5 px-5 font-semibold">vikram.sharma (Super Admin)</td>
@@ -1328,6 +1331,35 @@
     </div>
   </div>
 
+  <div id="super-admin-login-modal" class="fixed inset-0 bg-[#122331]/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#18232E] rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-base font-bold text-[#07576B] dark:text-teal-300">Super Admin Sign In</h3>
+          <p class="text-[11px] text-[#65727B] dark:text-slate-400">Connect to Express + MongoDB API</p>
+        </div>
+        <button onclick="closeModal('super-admin-login-modal')" class="text-[#65727B]"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form onsubmit="handleSuperAdminLogin(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-[#65727B] dark:text-slate-400 mb-1 font-medium">Super Admin Email</label>
+          <input type="email" id="login-email" required value="admin@medivault.in" class="w-full bg-[#F6F9FC] dark:bg-[#111922] border border-[#DFE8F0] dark:border-[#2B3D4E] rounded-xl px-3.5 py-2.5">
+        </div>
+        <div>
+          <label class="block text-[#65727B] dark:text-slate-400 mb-1 font-medium">Password</label>
+          <input type="password" id="login-password" required value="Admin@123" class="w-full bg-[#F6F9FC] dark:bg-[#111922] border border-[#DFE8F0] dark:border-[#2B3D4E] rounded-xl px-3.5 py-2.5">
+        </div>
+        <div class="p-3 rounded-xl bg-[#DFF3E9]/60 dark:bg-emerald-950/30 text-[#1B654E] dark:text-emerald-300 text-[11px]">
+          Only <strong>SUPER_ADMIN</strong> role is enabled for v1. Seeded credentials: <code>admin@medivault.in</code> / <code>Admin@123</code>
+        </div>
+        <div class="flex justify-end space-x-2 pt-2">
+          <button type="button" onclick="closeModal('super-admin-login-modal')" class="px-4 py-2 rounded-xl font-semibold text-[#65727B]">Offline Preview</button>
+          <button type="submit" class="px-4 py-2 rounded-xl font-semibold bg-[#07576B] text-white">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
@@ -1335,6 +1367,273 @@
   <script>
     lucide.createIcons();
     let ingestionChartInstance = null;
+
+    // Express API Base URL (same-origin when served by Express on :5000, or localhost:5000 when opened directly)
+    const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : (window.location.port === '5000' ? '/api' : 'http://localhost:5000/api');
+    let authToken = localStorage.getItem('medivault_admin_token') || '';
+    const liveState = {
+      users: [],
+      records: [],
+      ocrJobs: [],
+      providers: [],
+      advisories: [],
+      offers: [],
+      tickets: [],
+      auditLogs: [],
+      activeRecordId: null,
+      activeTicketId: null,
+      activeUserId: null,
+    };
+
+    async function apiFetch(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+      const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        authToken = '';
+        localStorage.removeItem('medivault_admin_token');
+        updateAuthUI(false);
+        throw new Error(data.error || 'Session expired');
+      }
+      if (!res.ok) throw new Error(data.error || 'API request failed');
+      return data;
+    }
+
+    function updateAuthUI(isConnected, adminName) {
+      const btn = document.getElementById('auth-status-btn');
+      const nameEl = document.getElementById('header-admin-name');
+      if (isConnected) {
+        if (btn) {
+          btn.innerText = 'Live · Sign Out';
+          btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#DFF3E9] text-[#1B654E] hover:bg-[#CBEBD9] transition';
+        }
+        if (nameEl && adminName) nameEl.innerText = adminName;
+      } else {
+        if (btn) {
+          btn.innerText = 'Connect API';
+          btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#FFF7E6] text-[#825122] hover:bg-[#FDEBC8] transition';
+        }
+      }
+    }
+
+    function handleAuthButtonClick() {
+      if (authToken) {
+        authToken = '';
+        localStorage.removeItem('medivault_admin_token');
+        updateAuthUI(false);
+        showToast('Signed out of Super Admin API');
+      } else {
+        openModal('super-admin-login-modal');
+      }
+    }
+
+    async function handleSuperAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        authToken = data.token;
+        localStorage.setItem('medivault_admin_token', authToken);
+        updateAuthUI(true, data.admin?.name);
+        closeModal('super-admin-login-modal');
+        showToast(`Signed in as ${data.admin?.name || 'Super Admin'}`);
+        await hydrateAllFromAPI();
+      } catch (err) {
+        showToast(err.message || 'Could not reach Express server on :5000');
+      }
+    }
+
+    async function hydrateAllFromAPI() {
+      if (!authToken) return;
+      try {
+        const [usersData, recordsData, ocrData, providersData, commsData, ticketsData, billingData, auditData] = await Promise.all([
+          apiFetch('/users'),
+          apiFetch('/records'),
+          apiFetch('/ocr'),
+          apiFetch('/providers'),
+          apiFetch('/communications'),
+          apiFetch('/tickets'),
+          apiFetch('/billing'),
+          apiFetch('/audit'),
+        ]);
+
+        liveState.users = usersData.users || [];
+        liveState.records = recordsData.records || [];
+        liveState.ocrJobs = ocrData.jobs || [];
+        liveState.providers = providersData.providers || [];
+        liveState.advisories = commsData.advisories || [];
+        liveState.offers = commsData.offers || [];
+        liveState.tickets = ticketsData.tickets || [];
+        liveState.auditLogs = auditData.logs || [];
+
+        renderUsers(liveState.users);
+        renderRecords(liveState.records);
+        renderOCRJobs(liveState.ocrJobs);
+        renderProviders(liveState.providers);
+        renderCommunications(liveState.advisories, liveState.offers);
+        renderTickets(liveState.tickets);
+        renderBilling(billingData.transactions || []);
+        renderAuditLogs(liveState.auditLogs);
+        lucide.createIcons();
+      } catch (err) {
+        console.warn('API hydration skipped:', err.message);
+      }
+    }
+
+    function renderUsers(users) {
+      const tbody = document.getElementById('users-table-body');
+      if (!tbody || !users.length) return;
+      tbody.innerHTML = users.map(u => `
+        <tr class="hover:bg-[#F8FBFE] dark:hover:bg-[#1E2B38] transition">
+          <td class="py-4 px-5">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-full bg-[#DFF3E9] text-[#1B654E] font-bold flex items-center justify-center">${u.initials}</div>
+              <div>
+                <div class="font-bold text-[#122331] dark:text-white">${u.name}</div>
+                <div class="text-[11px] text-[#65727B] dark:text-slate-400">${u.userCode}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-5 text-[#65727B] dark:text-slate-300">${u.email}<br><span class="text-[11px]">${u.phone}</span></td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full bg-[#DCEEFB] text-[#0D5877] font-semibold text-[11px]">${(u.familyMembers || []).length} Members</span></td>
+          <td class="py-4 px-5 font-semibold">${(u.familyMembers || []).reduce((s, m) => s + (m.recordCount || 0), 0)} records</td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full bg-[#DFF3E9] text-[#1B654E] font-semibold text-[11px]">${u.plan === 'family_premium' ? 'Family Care (₹499)' : 'Free Locker'}</span></td>
+          <td class="py-4 px-5"><span class="${u.status === 'active' ? 'text-[#1B654E] dark:text-emerald-400' : 'text-[#963A2A]'} font-semibold capitalize">${u.status}</span></td>
+          <td class="py-4 px-5 text-right"><button onclick="openUserDrawer('${u._id}')" class="px-3 py-1.5 rounded-xl bg-[#07576B] text-white font-semibold hover:bg-[#054353] transition">Inspect</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderRecords(records) {
+      const tbody = document.getElementById('records-table-body');
+      if (!tbody || !records.length) return;
+      tbody.innerHTML = records.map(r => `
+        <tr class="hover:bg-[#F8FBFE] dark:hover:bg-[#1E2B38]" data-category="${r.category}">
+          <td class="py-4 px-5 font-bold text-[#122331] dark:text-white">${r.title}</td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#DFF3E9] text-[#1B654E]">${r.category}</span></td>
+          <td class="py-4 px-5">${r.memberName} (${r.memberRelation})</td>
+          <td class="py-4 px-5 text-[#65727B]">${r.provider}</td>
+          <td class="py-4 px-5 text-[#65727B]">${r.recordDate}</td>
+          <td class="py-4 px-5 text-right"><button onclick="openBreakGlassModal('${r._id}', '${r.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-xl bg-[#F3F8FC] dark:bg-[#202E3C] text-[#07576B] dark:text-teal-300 font-semibold">Inspect</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderOCRJobs(jobs) {
+      const tbody = document.getElementById('ocr-table-body');
+      if (!tbody || !jobs.length) return;
+      tbody.innerHTML = jobs.map(j => `
+        <tr class="${j.stage === 'Password Locked' ? 'bg-[#FFF9F7] dark:bg-rose-950/10' : ''}">
+          <td class="py-4 px-5 font-semibold ${j.stage === 'Password Locked' ? 'text-[#963A2A]' : 'text-[#07576B] dark:text-teal-300'}">#${j.jobCode}</td>
+          <td class="py-4 px-5"><strong>${j.userName}</strong><br><span class="text-[11px] text-[#65727B]">${j.fileName}</span></td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full bg-[#DFF3E9] text-[#1B654E] font-semibold text-[11px]">${j.detectedCategory}</span></td>
+          <td class="py-4 px-5 font-bold">${j.confidence}%</td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full ${j.stage === 'Completed' ? 'bg-[#DFF3E9] text-[#1B654E]' : 'bg-[#FFEBE5] text-[#963A2A]'} text-[11px] font-semibold">${j.stage}</span></td>
+          <td class="py-4 px-5 text-right">${j.stage === 'Password Locked' || j.stage === 'Failed' ? `<button onclick="retryOCRJob('${j._id}')" class="px-3 py-1.5 rounded-xl bg-[#FFEBE5] text-[#963A2A] font-semibold">Retry OCR</button>` : '<span class="text-[#65727B]">Done</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderProviders(providers) {
+      const grid = document.getElementById('providers-grid');
+      if (!grid || !providers.length) return;
+      grid.innerHTML = providers.slice(0, 4).map(p => `
+        <div class="bg-[#DCEEFB]/60 dark:bg-[#18232E] card-gentle p-5 border border-[#C8E2F6] dark:border-[#243442] flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-sky-950/60 text-[#0D5877] dark:text-sky-300 text-[10px] font-bold">${p.category}</span>
+              <span class="text-[11px] font-semibold text-[#1B654E]">${p.verified ? 'Verified' : 'Pending'}</span>
+            </div>
+            <h4 class="text-sm font-bold text-[#122331] dark:text-white mt-3">${p.name}</h4>
+            <p class="text-xs text-[#65727B] dark:text-slate-400 mt-1">${p.address}</p>
+            <p class="text-xs text-[#122331] dark:text-slate-300 mt-3 font-medium">${p.phone}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-black/5 dark:border-white/10 flex justify-between text-xs">
+            <span class="text-[#65727B]">${p.hours}</span>
+            <button onclick="toggleProviderVerify('${p._id}')" class="font-bold text-[#07576B] dark:text-teal-300">${p.verified ? 'Unverify' : 'Verify'}</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCommunications(advisories, offers) {
+      const advEl = document.getElementById('advisories-list');
+      if (advEl && advisories.length) {
+        advEl.innerHTML = `<h3 class="text-sm font-bold text-[#1B654E] dark:text-emerald-300">Public Health Advisories</h3>` + advisories.map(a => `
+          <div class="p-4 rounded-2xl bg-[#DFF3E9]/60 dark:bg-emerald-950/30 space-y-1.5">
+            <div class="flex justify-between text-xs font-bold text-[#122331] dark:text-white">
+              <span>${a.title}</span><span class="text-[#1B654E]">${a.status}</span>
+            </div>
+            <p class="text-xs text-[#65727B] dark:text-slate-300">${a.body}</p>
+            <div class="text-[11px] text-[#65727B] pt-1">${a.audience} · Expires ${a.expiresAt}</div>
+          </div>
+        `).join('');
+      }
+      const offEl = document.getElementById('offers-list');
+      if (offEl && offers.length) {
+        offEl.innerHTML = `<h3 class="text-sm font-bold text-[#0D5877] dark:text-sky-300">Commercial Partner Offers</h3>` + offers.map(o => `
+          <div class="p-4 rounded-2xl bg-[#DCEEFB]/60 dark:bg-sky-950/30 space-y-1.5">
+            <div class="flex justify-between text-xs font-bold text-[#122331] dark:text-white">
+              <span>${o.title}</span><span class="text-[#0D5877]">${o.partnerName}</span>
+            </div>
+            <p class="text-xs text-[#65727B] dark:text-slate-300">${o.body}</p>
+            <div class="text-[11px] text-[#65727B] pt-1">Code: ${o.promoCode} · ${o.redemptions} Redemptions</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderTickets(tickets) {
+      const tbody = document.getElementById('support-table-body');
+      if (!tbody || !tickets.length) return;
+      tbody.innerHTML = tickets.map(t => `
+        <tr>
+          <td class="py-4 px-5 font-bold text-[#07576B]">#${t.caseCode}</td>
+          <td class="py-4 px-5 font-semibold">${t.customerName}</td>
+          <td class="py-4 px-5">${t.subject}</td>
+          <td class="py-4 px-5 font-semibold">${t.priority}</td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full ${t.status === 'Resolved' ? 'bg-[#DFF3E9] text-[#1B654E]' : 'bg-[#FFF7E6] text-[#825122]'} text-[11px] font-semibold">${t.status}</span></td>
+          <td class="py-4 px-5 text-right"><button onclick="openSupportModal('${t._id}', '${t.customerName.replace(/'/g, "\\'")}', '${t.subject.replace(/'/g, "\\'")}', '${t.caseCode}')" class="px-3 py-1.5 rounded-xl bg-[#07576B] text-white font-semibold">Handle</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderBilling(transactions) {
+      const tbody = document.getElementById('billing-transactions-body');
+      if (!tbody || !transactions.length) return;
+      tbody.innerHTML = transactions.map(tx => `
+        <tr>
+          <td class="py-4 px-5 font-semibold text-[#07576B]">${tx.transactionId}</td>
+          <td class="py-4 px-5 font-semibold">${tx.customerName} (${tx.memberCount} members)</td>
+          <td class="py-4 px-5 font-bold">₹${tx.amountInr.toLocaleString('en-IN')}</td>
+          <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full bg-[#DFF3E9] text-[#1B654E] text-[11px] font-semibold">${tx.status}</span></td>
+          <td class="py-4 px-5 text-[#65727B]">${tx.dateLabel}</td>
+          <td class="py-4 px-5 text-right"><button onclick="showToast('Downloading GST Invoice')" class="text-[#07576B] font-semibold hover:underline">Download PDF</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAuditLogs(logs) {
+      const tbody = document.getElementById('audit-table-body');
+      if (!tbody || !logs.length) return;
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td class="py-3.5 px-5 text-[#65727B]">${new Date(l.createdAt).toLocaleString()}</td>
+          <td class="py-3.5 px-5 font-semibold">${l.operator}</td>
+          <td class="py-3.5 px-5">${l.action}</td>
+          <td class="py-3.5 px-5">${l.targetEntity}</td>
+          <td class="py-3.5 px-5"><span class="px-2.5 py-0.5 rounded-full bg-[#DFF3E9] text-[#1B654E] text-[11px] font-semibold">${l.result}</span></td>
+        </tr>
+      `).join('');
+    }
 
     function toggleTheme() {
       const isDark = document.documentElement.classList.toggle('dark');
@@ -1384,43 +1683,121 @@
     function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
 
     function openBreakGlassModal(id, title) {
-      document.getElementById('break-glass-doc-title').value = `${title} (REC-${1000 + id})`;
+      liveState.activeRecordId = id;
+      document.getElementById('break-glass-doc-title').value = `${title}`;
       openModal('break-glass-modal');
     }
-    function confirmBreakGlass() {
+    async function confirmBreakGlass() {
+      const reasonEl = document.querySelector('#break-glass-modal select');
+      const reason = reasonEl ? reasonEl.value : 'Customer support request';
+      if (authToken && liveState.activeRecordId) {
+        try {
+          await apiFetch(`/records/${liveState.activeRecordId}/break-glass`, {
+            method: 'POST',
+            body: JSON.stringify({ reason, totpCode: '123456' }),
+          });
+          await hydrateAllFromAPI();
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
       closeModal('break-glass-modal');
       showToast('Break-Glass access authorized & logged');
     }
 
-    function openUserDrawer(key) {
-      const profiles = {
-        vikram: { name: 'Vikram Sharma', id: 'USR-9021 · Self', initials: 'VS' },
-        pooja: { name: 'Pooja Sharma', id: 'USR-9022 · Wife', initials: 'PS' },
-        aarav: { name: 'Aarav Sharma', id: 'USR-9023 · Son', initials: 'AS' },
-        deepak: { name: 'Deepak Sharma', id: 'USR-9024 · Father', initials: 'DS' },
-      };
-      const p = profiles[key] || profiles.vikram;
-      document.getElementById('drawer-name').innerText = p.name;
-      document.getElementById('drawer-id').innerText = p.id;
-      document.getElementById('drawer-avatar').innerText = p.initials;
+    function openUserDrawer(keyOrId) {
+      const liveUser = liveState.users.find(u => u._id === keyOrId);
+      if (liveUser) {
+        liveState.activeUserId = liveUser._id;
+        document.getElementById('drawer-name').innerText = liveUser.name;
+        document.getElementById('drawer-id').innerText = `${liveUser.userCode} · ${liveUser.status}`;
+        document.getElementById('drawer-avatar').innerText = liveUser.initials;
+      } else {
+        const profiles = {
+          vikram: { name: 'Vikram Sharma', id: 'USR-9021 · Self', initials: 'VS' },
+          pooja: { name: 'Pooja Sharma', id: 'USR-9022 · Wife', initials: 'PS' },
+          aarav: { name: 'Aarav Sharma', id: 'USR-9023 · Son', initials: 'AS' },
+          deepak: { name: 'Deepak Sharma', id: 'USR-9024 · Father', initials: 'DS' },
+        };
+        const p = profiles[keyOrId] || profiles.vikram;
+        document.getElementById('drawer-name').innerText = p.name;
+        document.getElementById('drawer-id').innerText = p.id;
+        document.getElementById('drawer-avatar').innerText = p.initials;
+      }
       document.getElementById('user-drawer').classList.remove('translate-x-full');
     }
     function closeUserDrawer() { document.getElementById('user-drawer').classList.add('translate-x-full'); }
 
-    function openSupportModal(id, customer, subject) {
-      document.getElementById('support-ticket-id').innerText = `Case #${id}`;
+    function openSupportModal(id, customer, subject, caseCode) {
+      liveState.activeTicketId = id;
+      document.getElementById('support-ticket-id').innerText = `Case #${caseCode || id}`;
       document.getElementById('support-customer-name').innerText = customer;
       document.getElementById('support-subject').innerText = subject;
       openModal('support-modal');
     }
-    function resolveTicketAction() { closeModal('support-modal'); showToast('Ticket marked resolved'); }
+    async function resolveTicketAction() {
+      const noteEl = document.querySelector('#support-modal textarea');
+      if (authToken && liveState.activeTicketId) {
+        try {
+          await apiFetch(`/tickets/${liveState.activeTicketId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: 'Resolved', internalNote: noteEl?.value || 'Resolved by Super Admin' }),
+          });
+          await hydrateAllFromAPI();
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
+      closeModal('support-modal');
+      showToast('Ticket marked resolved');
+    }
 
-    function handleAlertSubmit(e) {
+    async function handleAlertSubmit(e) {
       e.preventDefault();
       const title = document.getElementById('alert-title-input').value;
+      const body = document.getElementById('alert-body-input').value;
+      if (authToken) {
+        try {
+          await apiFetch('/communications', {
+            method: 'POST',
+            body: JSON.stringify({ type: 'advisory', title, body, audience: 'All Family Profiles', expiresAt: '2026-12-31' }),
+          });
+          await hydrateAllFromAPI();
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
       closeModal('quick-alert-modal');
       showToast(`Advisory "${title}" published`);
       e.target.reset();
+    }
+
+    async function retryOCRJob(id) {
+      if (authToken && id) {
+        try {
+          await apiFetch(`/ocr/${id}/retry`, { method: 'POST' });
+          await hydrateAllFromAPI();
+          showToast('OCR job retried & completed');
+          return;
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
+      showToast('OCR job retried');
+    }
+
+    async function toggleProviderVerify(id) {
+      if (authToken && id) {
+        try {
+          await apiFetch(`/providers/${id}/verify`, { method: 'PATCH' });
+          await hydrateAllFromAPI();
+          showToast('Provider verification updated');
+          return;
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
+      showToast('Provider updated');
     }
 
     function filterRecordsByCategory(cat, el) {
@@ -1461,7 +1838,19 @@
     function toggleNotifications() { document.getElementById('notifications-dropdown').classList.toggle('hidden'); }
     function clearNotifications() { document.getElementById('notifications-dropdown').classList.add('hidden'); showToast('Notifications cleared'); }
     function exportAuditReport() { showToast('Exported MediVault_Audit_Nov2026.csv'); }
-    function simulateOCRJob() { showToast('OCR job #OCR-8824 completed (99.4% confidence)'); }
+    async function simulateOCRJob() {
+      if (authToken) {
+        try {
+          const data = await apiFetch('/ocr/simulate', { method: 'POST' });
+          await hydrateAllFromAPI();
+          showToast(`OCR job #${data.job?.jobCode} completed`);
+          return;
+        } catch (err) {
+          showToast(err.message);
+        }
+      }
+      showToast('OCR job #OCR-8824 completed (99.4% confidence)');
+    }
     function toggleSidebar() {
       const sb = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
@@ -1474,6 +1863,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      if (authToken) {
+        updateAuthUI(true);
+        hydrateAllFromAPI();
+      }
       const isDark = document.documentElement.classList.contains('dark');
       const ctx = document.getElementById('ingestionChart')?.getContext('2d');
       if (ctx) {
